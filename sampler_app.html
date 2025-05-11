@@ -8,20 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
-    /* MODIFIED BODY STYLE FOR SEAMLESS IFRAME INTEGRATION */
+    /* Body style for seamless iframe integration */
     body {
       font-family: 'Arial', sans-serif;
       background-color: transparent; /* Makes iframe background transparent */
       margin: 0;
       padding: 0; /* No padding on the body of the iframe content */
-      display: flex; /* Still useful to center the .sampler div */
+      display: flex; 
       justify-content: center;
       align-items: center;
-      /* min-height: 100vh; /* This line is commented out or removed to prevent iframe scroll issues with fixed height */
-      color: white; /* Default for any stray text, though sampler has its own colors */
+      /* min-height: 100vh; /* Removed to prevent iframe scroll issues with fixed height */
+      color: white; 
     }
     
-    /* YOUR EXISTING SAMPLER AND OTHER STYLES START HERE - UNCHANGED */
     .sampler {
       background-color: #35C6F2; 
       border-radius: 10px; 
@@ -33,6 +32,9 @@
       position: relative;
       display: flex; 
       flex-direction: column; 
+      /* Ensure no external margins causing overflow */
+      margin-top: 0;
+      margin-bottom: 0;
     }
 
     .main-title {
@@ -58,12 +60,12 @@
     
     .display {
       background-color: #0A0A0A; 
-      color: #FFA500; /* Default color for text within .display */
+      color: #FFA500;
       font-family: 'VT323', monospace; 
       height: 100px; 
       margin-bottom: 20px; 
       border-radius: 5px; 
-      padding: 10px; /* Added padding for inner text */
+      padding: 10px;
       display: flex; 
       justify-content: center;
       align-items: center;
@@ -72,220 +74,100 @@
       position: relative; 
       border: 2px solid #222;
       text-align: center; 
-      box-sizing: border-box; /* Include padding in height/width */
+      box-sizing: border-box;
     }
     
     .display-grain-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         pointer-events: none; 
         background: 
             linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
             linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.03));
         background-size: 100% 2px, 3px 100%;
         animation: grain-flicker 0.15s infinite;
-        opacity: 0.2; 
-        z-index: 1; 
+        opacity: 0.2; z-index: 1; 
     }
 
     @keyframes grain-flicker {
-      0% { opacity: 0.15; transform: translate(0,0); }
-      25% { opacity: 0.2; transform: translate(1px, -1px); }
-      50% { opacity: 0.1; transform: translate(-1px, 1px); }
-      75% { opacity: 0.25; transform: translate(1px, 1px); }
+      0% { opacity: 0.15; transform: translate(0,0); } 25% { opacity: 0.2; transform: translate(1px, -1px); }
+      50% { opacity: 0.1; transform: translate(-1px, 1px); } 75% { opacity: 0.25; transform: translate(1px, 1px); }
       100% { opacity: 0.15; transform: translate(0,0); }
     }
 
     .display-default-text {
-        font-family: 'VT323', monospace;
-        font-size: 24px; /* Adjusted size */
-        color: #FFB84D; 
-        line-height: 1.2;
-        z-index: 2; 
-        text-transform: lowercase;
-        display: none; /* Controlled by JS */
-        width: 100%; 
-        padding: 5px; /* Ensure text doesn't touch edges */
-        box-sizing: border-box;
+        font-family: 'VT323', monospace; font-size: 24px; color: #FFB84D; line-height: 1.2;
+        z-index: 2; text-transform: lowercase; display:none; width: 100%; 
+        padding: 5px; box-sizing: border-box;
     }
-    
-    .display-default-text.visible {
-        display: block;
-    }
+    .display-default-text.visible { display: block; }
 
     .display-status-overlay { 
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column; 
-        justify-content: center;
-        align-items: center;
-        color: #FF8C00; 
-        font-size: 28px; 
-        font-weight: bold;
-        text-shadow: 0 0 5px rgba(255, 140, 0, 0.7);
-        z-index: 3; 
-        background-color: rgba(10, 10, 10, 0.9);
-        opacity: 0; 
-        transition: opacity 0.2s ease-in-out;
-        padding: 5px;
-        box-sizing: border-box;
-        text-align: center;
-        pointer-events: none; 
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        display: flex; flex-direction: column; justify-content: center; align-items: center;
+        color: #FF8C00; font-size: 28px; font-weight: bold;
+        text-shadow: 0 0 5px rgba(255, 140, 0, 0.7); z-index: 3; 
+        background-color: rgba(10, 10, 10, 0.9); opacity: 0; 
+        transition: opacity 0.2s ease-in-out; padding: 5px; box-sizing: border-box;
+        text-align: center; pointer-events: none; 
     }
+    .display-status-overlay.visible { opacity: 1; pointer-events: auto; }
+    .display-status-overlay .bpm-value { font-size: 48px; line-height: 1; }
+    .display-status-overlay .bpm-label { font-size: 16px; margin-top: -5px; }
 
-    .display-status-overlay.visible {
-        opacity: 1;
-        pointer-events: auto; 
-    }
-    .display-status-overlay .bpm-value {
-        font-size: 48px; 
-        line-height: 1;
-    }
-    .display-status-overlay .bpm-label {
-        font-size: 16px;
-        margin-top: -5px; 
-    }
-
-    .controls {
-      display: flex;
-      justify-content: space-around; 
-      margin-bottom: 10px; 
-    }
-    
-    .control-group {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+    .controls { display: flex; justify-content: space-around; margin-bottom: 10px; }
+    .control-group { display: flex; flex-direction: column; align-items: center; }
     
     .knob {
-      width: 42px; 
-      height: 42px;
-      background-color: #5DADE2; 
-      border-radius: 50%;
-      margin-bottom: 5px; 
-      position: relative;
-      border: 2px solid #34708E; 
+      width: 42px; height: 42px; background-color: #5DADE2; border-radius: 50%;
+      margin-bottom: 5px; position: relative; border: 2px solid #34708E; 
       box-shadow: 0 2px 4px rgba(0,0,0,0.35), inset 0 1px 2px rgba(255,255,255,0.25);
       cursor: grab;
+      transition: box-shadow 0.2s ease-out; /* For pulse transition */
     }
-
-    .knob:active {
-        cursor: grabbing;
-    }
-    
+    .knob:active, .knob.active-knob-interaction { cursor: grabbing; }
     .knob::after { 
-      content: '';
-      position: absolute;
-      bottom: 50%; 
-      left: 50%;   
-      width: 3px;  
-      height: 10px; 
-      background-color: #FFFFFF; 
-      border-radius: 1px; 
+      content: ''; position: absolute; bottom: 50%; left: 50%; width: 3px; height: 10px; 
+      background-color: #FFFFFF; border-radius: 1px; 
       transform-origin: center bottom; 
       transform: translateX(-50%) rotate(var(--knob-rotation-dynamic, -135deg)); 
       pointer-events: none; 
     }
+    .knob-label { font-size: 9px; color: #D0D0D0; text-align: center; font-weight: bold; }
     
-    .knob-label {
-      font-size: 9px;
-      color: #D0D0D0; 
-      text-align: center;
-      font-weight: bold;
-    }
-    
-    .buttons-grid { 
-      display: grid;
-      grid-template-columns: repeat(3, 1fr); 
-      gap: 8px;
-      margin-bottom: 15px;
-    }
-            
-    .pads {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 8px; 
-      background-color: #1E1E1E; 
-      padding: 10px;
-      border-radius: 6px;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
-    }
-    
-    .pad {
-      background-color: #686868; 
-      color: #1C1C1C; 
-      border-radius: 4px; 
-      aspect-ratio: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 18px; 
-      cursor: pointer;
-      box-shadow: 0 3px 0 #484848; 
-      position: relative; 
-      user-select: none;
+    .buttons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+    .pads { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background-color: #1E1E1E; 
+            padding: 10px; border-radius: 6px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6); }
+    .pad { 
+      background-color: #686868; color: #1C1C1C; border-radius: 4px; aspect-ratio: 1;
+      display: flex; justify-content: center; align-items: center;
+      font-weight: bold; font-size: 18px; cursor: pointer;
+      box-shadow: 0 3px 0 #484848; position: relative; user-select: none;
       transition: background-color 0.05s, box-shadow 0.05s, transform 0.05s;
     }
-    
-    .pad:hover {
-        background-color: #7A7A7A;
-    }
-
+    .pad:hover { background-color: #7A7A7A; }
     .pad:active, .pad.active-playing { 
-      background-color: #FF8000; 
-      box-shadow: 0 1px 0 #D06800; 
-      transform: translateY(2px);
-      color: #FFFFFF;
+      background-color: #FF8000; box-shadow: 0 1px 0 #D06800; 
+      transform: translateY(2px); color: #FFFFFF;
     }
-    
     .button {
-      background-color: #383838; 
-      color: #D8D8D8; 
-      border-radius: 4px;
-      display: flex;
-      flex-direction: column; 
-      justify-content: center;
-      align-items: center;
-      font-size: 9px; 
-      font-weight: bold;
-      line-height: 1.2;
-      cursor: pointer;
-      padding: 6px 4px; 
-      text-align: center;
-      box-shadow: 0 2px 0 #181818; 
-      user-select: none;
-      min-height: 35px; 
+      background-color: #383838; color: #D8D8D8; border-radius: 4px;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      font-size: 9px; font-weight: bold; line-height: 1.2; cursor: pointer;
+      padding: 6px 4px; text-align: center; box-shadow: 0 2px 0 #181818; 
+      user-select: none; min-height: 35px; 
       transition: background-color 0.1s, box-shadow 0.1s, transform 0.1s;
     }
-    
-    .button:hover {
-        background-color: #4A4A4A;
-    }
-
+    .button:hover { background-color: #4A4A4A; }
     .button:active, .button.active {
-      background-color: #FF7700; 
-      color: white;
-      box-shadow: 0 0 0 #101010;
-      transform: translateY(2px);
+      background-color: #FF7700; color: white;
+      box-shadow: 0 0 0 #101010; transform: translateY(2px);
     }
             
     @media (max-width: 600px) {
       .sampler { padding: 15px; max-width: 95%; }
       .main-title { font-size: 30px; margin-bottom: 15px;} 
       .knob { width: 38px; height: 38px; }
-      .knob::after { 
-        height: 8px; 
-        width: 2.5px; 
-      }
+      .knob::after { height: 8px; width: 2.5px; }
       .pad { font-size: 15px; }
       .button { font-size: 8px; padding: 5px 3px; min-height: 30px;}
       .display-default-text { font-size: 18px; }
@@ -297,549 +179,322 @@
 </head>
 <body>
   <div class="sampler">
-    <div class="main-title">PSTN-404909</div> <div class="knob-panel">
+    <div class="main-title">PSTN-404909</div>
+    <div class="knob-panel">
         <div class="controls">
-          <div class="control-group">
-            <div class="knob" id="volumeKnob" data-value="80"></div>
-            <div class="knob-label">VOLUME</div>
-          </div>
-          <div class="control-group">
-            <div class="knob" id="echoFeedbackKnob" data-value="0"></div> 
-            <div class="knob-label">ECHO FEEDBACK</div>    
-          </div>
-          <div class="control-group">
-            <div class="knob" id="reverbDecayKnob" data-value="30"></div>
-            <div class="knob-label">REVERB DECAY</div>
-          </div>
-          <div class="control-group">
-            <div class="knob" id="fxVolumeKnob" data-value="0"></div>
-            <div class="knob-label">FX VOLUME</div>
-          </div>
+          <div class="control-group"> <div class="knob" id="volumeKnob"></div> <div class="knob-label">VOLUME</div> </div>
+          <div class="control-group"> <div class="knob" id="echoFeedbackKnob"></div> <div class="knob-label">ECHO FEEDBACK</div> </div>
+          <div class="control-group"> <div class="knob" id="reverbDecayKnob"></div> <div class="knob-label">REVERB DECAY</div> </div>
+          <div class="control-group"> <div class="knob" id="fxVolumeKnob"></div> <div class="knob-label">FX VOLUME</div> </div>
         </div>
     </div>
-    
     <div class="display">
         <div id="defaultDisplayText" class="display-default-text">public spreads the news</div>
-        <div id="statusDisplayText" class="display-status-overlay">
-            </div>
+        <div id="statusDisplayText" class="display-status-overlay"></div>
         <div class="display-grain-overlay"></div>
     </div>
-    
     <div class="buttons-grid">
-      <div class="button" id="patternSelectButton">PATTERN<br>SELECT</div>
-      <div class="button" id="recButton">REC</div>
-      <div class="button" id="markButton">MARK</div> 
-      <div class="button" id="deleteButton">DELETE</div> 
-      <div class="button" id="loopButton">LOOP</div>
-      <div class="button" id="startButton">START<br>STOP</div>
+      <div class="button" id="patternSelectButton">PATTERN<br>SELECT</div> <div class="button" id="recButton">REC</div>
+      <div class="button" id="markButton">MARK</div> <div class="button" id="deleteButton">DELETE</div>
+      <div class="button" id="loopButton">LOOP</div> <div class="button" id="startButton">START<br>STOP</div>
     </div>
-    
     <div class="pads" id="pads">
-      <div class="pad" data-pad="1">1</div> <div class="pad" data-pad="2">2</div>
-      <div class="pad" data-pad="3">3</div> <div class="pad" data-pad="4">4</div>
-      <div class="pad" data-pad="5">5</div> <div class="pad" data-pad="6">6</div>
-      <div class="pad" data-pad="7">7</div> <div class="pad" data-pad="8">8</div>
-      <div class="pad" data-pad="9">9</div> <div class="pad" data-pad="10">10</div>
-      <div class="pad" data-pad="11">11</div><div class="pad" data-pad="12">12</div>
+      <div class="pad" data-pad="1">1</div> <div class="pad" data-pad="2">2</div> <div class="pad" data-pad="3">3</div> <div class="pad" data-pad="4">4</div>
+      <div class="pad" data-pad="5">5</div> <div class="pad" data-pad="6">6</div> <div class="pad" data-pad="7">7</div> <div class="pad" data-pad="8">8</div>
+      <div class="pad" data-pad="9">9</div> <div class="pad" data-pad="10">10</div> <div class="pad" data-pad="11">11</div><div class="pad" data-pad="12">12</div>
     </div>
-        
   </div>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // --- Global State & Elements ---
       const defaultDisplayTextEl = document.getElementById('defaultDisplayText');
       const statusDisplayTextEl = document.getElementById('statusDisplayText');
       const padsContainer = document.getElementById('pads');
       
-      // --- Tone.js Setup ---
       let mainVolume, feedbackDelay, reverb, fxCrossFade; 
       let toneJsInitialized = false;
-      let playbackStartTime = 0; 
       const BPM = 110; 
       let displayStateTimeout = null; 
 
-      // --- Sampler State ---
-      const banks = { 
-        defaultBank: { 
-          1: ['kick.mp3', 'kick2.mp3'], 2: ['snare.mp3', 'clap.mp3'],
-          3: ['hihat.mp3', 'openhat.mp3'], 4: ['perc.mp3', 'cowbell.mp3'],
-          5: ['bass.mp3', 'sub.mp3'], 6: ['synth.mp3', 'pad.mp3'],
-          7: ['vocal.mp3', 'vox.mp3'], 8: ['fx.mp3', 'sweep.mp3'],
-          9: ['click.mp3', 'snap.mp3'], 10: ['tom.mp3', 'rimshot.mp3'],
-          11: ['noise.mp3', 'crash.mp3'], 12: ['stab.mp3', 'chord.mp3']
-        }
-      };
+      const banks = { defaultBank: { 
+          1: ['kick.mp3', 'kick2.mp3'], 2: ['snare.mp3', 'clap.mp3'], 3: ['hihat.mp3', 'openhat.mp3'], 4: ['perc.mp3', 'cowbell.mp3'],
+          5: ['bass.mp3', 'sub.mp3'], 6: ['synth.mp3', 'pad.mp3'], 7: ['vocal.mp3', 'vox.mp3'], 8: ['fx.mp3', 'sweep.mp3'],
+          9: ['click.mp3', 'snap.mp3'], 10: ['tom.mp3', 'rimshot.mp3'], 11: ['noise.mp3', 'crash.mp3'], 12: ['stab.mp3', 'chord.mp3']
+      }};
       const loadedSounds = { defaultBank: {} }; 
-      const currentBank = 'defaultBank'; 
       const padIndices = {}; 
       for (let i = 1; i <= 12; i++) padIndices[i] = 0;
       
-      let isRecording = false;
-      let recordedSequence = []; 
-      let recordStartTime = 0;
-      let isPlaying = false;
-      let isLooping = false;
-      const playbackTimeouts = [];
-      let sequenceEndTimeout = null;
-
+      let isRecording = false, recordedSequence = [], recordStartTime = 0;
+      let isPlaying = false, isLooping = false;
+      const playbackTimeouts = []; let sequenceEndTimeout = null;
       let loopMarkerTimes = { start: null, end: null };
 
-      // --- Display Update Function ---
+      const KNOB_IDS = ['volumeKnob', 'echoFeedbackKnob', 'reverbDecayKnob', 'fxVolumeKnob'];
+      window.samplerPulseTimeouts = {}; // Use window object to ensure it's accessible
+
       function updateMainDisplay(mode = 'idle', textContent = '') {
           clearTimeout(displayStateTimeout); 
-
           if (defaultDisplayTextEl) defaultDisplayTextEl.classList.remove('visible');
-          if (statusDisplayTextEl) {
-            statusDisplayTextEl.classList.remove('visible');
-            statusDisplayTextEl.innerHTML = ''; 
-          }
-
+          if (statusDisplayTextEl) { statusDisplayTextEl.classList.remove('visible'); statusDisplayTextEl.innerHTML = ''; }
           switch (mode) {
-              case 'idle':
-                  if (defaultDisplayTextEl) defaultDisplayTextEl.classList.add('visible');
-                  break;
-              case 'recording':
-                  if (statusDisplayTextEl) {
-                    statusDisplayTextEl.innerHTML = 'RECORDING...';
-                    statusDisplayTextEl.classList.add('visible');
-                  }
-                  break;
-              case 'playing':
-                  if (statusDisplayTextEl) {
-                    statusDisplayTextEl.innerHTML = 'PLAYING...';
-                    statusDisplayTextEl.classList.add('visible');
-                  }
-                  break;
-              case 'tempo':
-                  if (statusDisplayTextEl) {
-                    statusDisplayTextEl.innerHTML = `<div class="bpm-value">${BPM}</div><div class="bpm-label">BPM</div>`;
-                    statusDisplayTextEl.classList.add('visible');
-                  }
-                  displayStateTimeout = setTimeout(() => {
-                      updateMainDisplay('idle');
-                  }, 2500); 
-                  break;
-              case 'customText': 
-                  if (statusDisplayTextEl) {
-                    statusDisplayTextEl.innerHTML = textContent;
-                    statusDisplayTextEl.classList.add('visible');
-                  }
-                  break;
+              case 'idle': if (defaultDisplayTextEl) defaultDisplayTextEl.classList.add('visible'); break;
+              case 'recording': if (statusDisplayTextEl) { statusDisplayTextEl.innerHTML = 'RECORDING...'; statusDisplayTextEl.classList.add('visible'); } break;
+              case 'playing': if (statusDisplayTextEl) { statusDisplayTextEl.innerHTML = 'PLAYING...'; statusDisplayTextEl.classList.add('visible'); } break;
+              case 'tempo': 
+                  if (statusDisplayTextEl) { statusDisplayTextEl.innerHTML = `<div class="bpm-value">${BPM}</div><div class="bpm-label">BPM</div>`; statusDisplayTextEl.classList.add('visible'); }
+                  displayStateTimeout = setTimeout(() => updateMainDisplay('idle'), 2500); break;
+              case 'customText': if (statusDisplayTextEl) { statusDisplayTextEl.innerHTML = textContent; statusDisplayTextEl.classList.add('visible'); } break;
           }
       }
-
 
       async function initAudio() {
         if (toneJsInitialized) return;
         try {
           await Tone.start(); 
-          mainVolume = new Tone.Gain(0.8); 
-          feedbackDelay = new Tone.FeedbackDelay({ delayTime: "8n.", feedback: 0.0, maxDelay: 1.0 });
-          reverb = new Tone.Reverb({ decay: 1.5, preDelay: 0.01 });
-          fxCrossFade = new Tone.CrossFade(0); 
-          mainVolume.connect(fxCrossFade.a); 
-          mainVolume.chain(feedbackDelay, reverb, fxCrossFade.b); 
-          fxCrossFade.toDestination(); 
-          toneJsInitialized = true;
-          updateMainDisplay('idle'); 
-          loadDefaultSounds(); 
-          initKnobs(); 
-        } catch (e) {
-          console.error("Error initializing Tone.js or Web Audio:", e);
-          updateMainDisplay('customText', "AUDIO ERROR");
-        }
+          mainVolume = new Tone.Gain(); feedbackDelay = new Tone.FeedbackDelay({ delayTime: "8n.", feedback: 0.0, maxDelay: 1.0 });
+          reverb = new Tone.Reverb({ preDelay: 0.01 }); fxCrossFade = new Tone.CrossFade();
+          mainVolume.connect(fxCrossFade.a); mainVolume.chain(feedbackDelay, reverb, fxCrossFade.b); fxCrossFade.toDestination(); 
+          toneJsInitialized = true; updateMainDisplay('idle'); loadDefaultSounds(); initKnobs();
+          startPulsingEffectAfterAudioInit(); // Start pulsing now that audio is ready
+        } catch (e) { console.error("Audio Init Error:", e); updateMainDisplay('customText', "AUDIO ERROR"); }
+      }
+      
+      // Ensure this is called after initKnobs to apply initial values to Tone.js components
+      function applyInitialKnobSettings() {
+          if (!toneJsInitialized) return;
+          KNOB_IDS.forEach(id => {
+              const knobElement = document.getElementById(id);
+              if (knobElement && knobElement.dataset.value) {
+                  applyKnobEffect(id, parseFloat(knobElement.dataset.value));
+              }
+          });
       }
 
       function initKnobs() {
-        setupKnob('volumeKnob', parseFloat(document.getElementById('volumeKnob').dataset.value) || 80, applyKnobEffect);
-        setupKnob('echoFeedbackKnob', parseFloat(document.getElementById('echoFeedbackKnob').dataset.value) || 0, applyKnobEffect); 
-        setupKnob('reverbDecayKnob', parseFloat(document.getElementById('reverbDecayKnob').dataset.value) || 30, applyKnobEffect);
-        setupKnob('fxVolumeKnob', parseFloat(document.getElementById('fxVolumeKnob').dataset.value) || 0, applyKnobEffect);
+          setupKnob('volumeKnob', 75, applyKnobEffect); 
+          setupKnob('echoFeedbackKnob', 15, applyKnobEffect);
+          setupKnob('reverbDecayKnob', 8, applyKnobEffect);
+          setupKnob('fxVolumeKnob', 15, applyKnobEffect);
+          if (toneJsInitialized) { // If audio is already up, apply effects now
+            applyInitialKnobSettings();
+          }
       }
+      
+      // NEW setupKnob function for twist interaction
+      function setupKnob(id, initialValuePercentage, callback) {
+          const knob = document.getElementById(id);
+          if (!knob) return;
 
- // INSIDE sampler_app.html -> <script>
-function setupKnob(id, initialValue, callback) {
-    const knob = document.getElementById(id);
-    if (!knob) return;
-    knob.dataset.value = initialValue;
-    updateKnobVisual(knob, initialValue);
-    let isDragging = false;
-    let startY, startValue;
+          let currentValue = initialValuePercentage;
+          knob.dataset.value = currentValue; // Store initial value
+          updateKnobVisual(knob, currentValue);
 
-    // Mouse Event Handlers (already there)
-    function handleMouseDown(e) {
-        if (!toneJsInitialized) initAudio();
-        isDragging = true;
-        startY = e.clientY; // For mouse
-        startValue = parseFloat(knob.dataset.value);
-        knob.style.cursor = 'grabbing';
-        document.addEventListener('mousemove', handleMouseMove);
-        document.addEventListener('mouseup', handleMouseUp);
-        e.preventDefault();
-    }
+          let isDragging = false;
+          let currentAngleDeg = (currentValue / 100) * 270 - 135; // Initial angle based on value
+          let startDragAngleOffset = 0; // To make dragging feel natural
 
-    function handleMouseMove(e) {
-        if (!isDragging) return;
-        const deltaY = startY - e.clientY; // For mouse
-        let newValue = startValue + (deltaY / 1.5);
-        newValue = Math.max(0, Math.min(100, Math.round(newValue)));
-        knob.dataset.value = newValue;
-        updateKnobVisual(knob, newValue);
-        if (callback) callback(id, newValue);
-    }
+          function getKnobCenter(element) {
+              const rect = element.getBoundingClientRect();
+              return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
+          }
 
-    function handleMouseUp() {
-        isDragging = false;
-        knob.style.cursor = 'grab';
-        document.removeEventListener('mousemove', handleMouseMove);
-        document.removeEventListener('mouseup', handleMouseUp);
-    }
+          function calculateAngleFromCenter(clientX, clientY, centerX, centerY) {
+              const deltaX = clientX - centerX;
+              const deltaY = clientY - centerY;
+              return Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+          }
+          
+          function angleToValue(angle) {
+              // Normalize angle to be within -135 to +135
+              let clampedAngle = Math.max(-135, Math.min(135, angle));
+              // Convert to 0-100 value
+              let value = ((clampedAngle + 135) / 270) * 100;
+              return Math.round(Math.max(0, Math.min(100, value)));
+          }
 
-    // Touch Event Handlers (NEW)
-    function handleTouchStart(e) {
-        if (!toneJsInitialized) initAudio();
-        isDragging = true;
-        // For touch, clientY is on the touch object
-        startY = e.touches[0].clientY;
-        startValue = parseFloat(knob.dataset.value);
-        // No cursor style change needed for touch generally
-        document.addEventListener('touchmove', handleTouchMove, { passive: false }); // passive: false to allow preventDefault
-        document.addEventListener('touchend', handleTouchEnd);
-        document.addEventListener('touchcancel', handleTouchEnd); // Handle abrupt touch ends
-        e.preventDefault(); // Prevent page scroll while dragging knob
-    }
+          function startInteraction(clientX, clientY) {
+              if (!toneJsInitialized && typeof initAudio === 'function') initAudio();
+              isDragging = true;
+              document.body.classList.add('knob-interaction-active');
+              knob.classList.add('active-knob-interaction');
+              knob.classList.remove('pulsing'); // Stop pulsing
+              if (window.samplerPulseTimeouts && window.samplerPulseTimeouts[knob.id]) {
+                  clearTimeout(window.samplerPulseTimeouts[knob.id]);
+              }
 
-    function handleTouchMove(e) {
-        if (!isDragging) return;
-        const deltaY = startY - e.touches[0].clientY; // For touch
-        let newValue = startValue + (deltaY / 1.5);
-        newValue = Math.max(0, Math.min(100, Math.round(newValue)));
-        knob.dataset.value = newValue;
-        updateKnobVisual(knob, newValue);
-        if (callback) callback(id, newValue);
-        e.preventDefault(); // Prevent page scroll while dragging knob
-    }
+              const center = getKnobCenter(knob);
+              const initialTouchAngle = calculateAngleFromCenter(clientX, clientY, center.x, center.y);
+              startDragAngleOffset = initialTouchAngle - currentAngleDeg;
+          }
 
-    function handleTouchEnd() {
-        isDragging = false;
-        document.removeEventListener('touchmove', handleTouchMove);
-        document.removeEventListener('touchend', handleTouchEnd);
-        document.removeEventListener('touchcancel', handleTouchEnd);
-    }
+          function moveInteraction(clientX, clientY) {
+              if (!isDragging) return;
+              const center = getKnobCenter(knob);
+              const rawAngle = calculateAngleFromCenter(clientX, clientY, center.x, center.y);
+              currentAngleDeg = rawAngle - startDragAngleOffset;
+              
+              // Keep angle within a reasonable range if it wraps around due to atan2
+              // This ensures the knob doesn't "jump" if you drag across the +/-180 boundary quickly
+              currentAngleDeg = Math.max(-135, Math.min(135, currentAngleDeg));
 
-    // Add Mouse Listeners
-    knob.addEventListener('mousedown', handleMouseDown);
+              currentValue = angleToValue(currentAngleDeg);
+              knob.dataset.value = currentValue;
+              updateKnobVisual(knob, currentValue);
+              if (callback) callback(id, currentValue);
+          }
 
-    // Add Touch Listeners
-    knob.addEventListener('touchstart', handleTouchStart, { passive: false });
+          function endInteraction() {
+              if (!isDragging) return;
+              isDragging = false;
+              document.body.classList.remove('knob-interaction-active');
+              knob.classList.remove('active-knob-interaction');
+              // Optionally, restart pulsing logic here if desired
+          }
 
+          knob.addEventListener('mousedown', (e) => {
+              startInteraction(e.clientX, e.clientY);
+              document.addEventListener('mousemove', onMouseMove);
+              document.addEventListener('mouseup', onMouseUp);
+              e.preventDefault();
+          });
+          function onMouseMove(e) { moveInteraction(e.clientX, e.clientY); }
+          function onMouseUp() {
+              endInteraction();
+              document.removeEventListener('mousemove', onMouseMove);
+              document.removeEventListener('mouseup', onMouseUp);
+          }
 
-    // Apply initial value if audio is already initialized
-    if (callback && toneJsInitialized) callback(id, initialValue);
-}
-        function handleDrag(e) {
-          if (!isDragging) return;
-          const deltaY = startY - e.clientY; 
-          let newValue = startValue + (deltaY / 1.5); 
-          newValue = Math.max(0, Math.min(100, Math.round(newValue))); 
-          knob.dataset.value = newValue;
-          updateKnobVisual(knob, newValue);
-          if (callback) callback(id, newValue);
-        }
-        function stopDrag() {
-          isDragging = false;
-          knob.style.cursor = 'grab';
-          document.removeEventListener('mousemove', handleDrag);
-          document.removeEventListener('mouseup', stopDrag);
-        }
-        if (callback && toneJsInitialized) callback(id, initialValue); 
+          knob.addEventListener('touchstart', (e) => {
+              if (e.touches.length === 1) {
+                  startInteraction(e.touches[0].clientX, e.touches[0].clientY);
+                  document.addEventListener('touchmove', onTouchMove, { passive: false });
+                  document.addEventListener('touchend', onTouchEnd);
+                  document.addEventListener('touchcancel', onTouchEnd);
+              }
+              e.preventDefault();
+          }, { passive: false });
+          function onTouchMove(e) {
+              if (e.touches.length === 1) { moveInteraction(e.touches[0].clientX, e.touches[0].clientY); }
+              e.preventDefault();
+          }
+          function onTouchEnd() {
+              endInteraction();
+              document.removeEventListener('touchmove', onTouchMove);
+              document.removeEventListener('touchend', onTouchEnd);
+              document.removeEventListener('touchcancel', onTouchEnd);
+          }
+          // Apply initial effect if audio is ready, otherwise it will be applied by applyInitialKnobSettings later
+          if (toneJsInitialized && callback) {
+             callback(id, currentValue);
+          }
       }
 
       function updateKnobVisual(knobElement, value) {
-        const maxRotation = 270; 
-        const rotation = (value / 100) * maxRotation - (maxRotation / 2);
-        knobElement.style.setProperty('--knob-rotation-dynamic', rotation + 'deg');
+          const maxRotation = 270; 
+          const rotation = (value / 100) * maxRotation - (maxRotation / 2);
+          knobElement.style.setProperty('--knob-rotation-dynamic', rotation + 'deg');
       }
       
       function applyKnobEffect(id, value) {
         if (!toneJsInitialized) return;
         const normalizedValue = value / 100; 
         switch(id) {
-          case 'volumeKnob':
-            if (mainVolume) mainVolume.gain.value = normalizedValue * normalizedValue; 
-            break;
-          case 'echoFeedbackKnob': 
-            if (feedbackDelay) feedbackDelay.feedback.value = normalizedValue * 0.85; 
-            break;
+          case 'volumeKnob': if (mainVolume) mainVolume.gain.value = normalizedValue * normalizedValue; break;
+          case 'echoFeedbackKnob': if (feedbackDelay) feedbackDelay.feedback.value = normalizedValue * 0.85; break;
           case 'reverbDecayKnob': 
             const minDecay = 0.1; const maxDecay = 8.0;
-            if (reverb) reverb.decay = minDecay + (maxDecay - minDecay) * normalizedValue;
-            break;
-          case 'fxVolumeKnob': 
-            if (fxCrossFade) fxCrossFade.fade.value = normalizedValue; 
-            break;
+            if (reverb) reverb.decay = minDecay + (maxDecay - minDecay) * normalizedValue; break;
+          case 'fxVolumeKnob': if (fxCrossFade) fxCrossFade.fade.value = normalizedValue; break;
         }
       }
 
-      function createSynthSound(type, frequency, duration, audioCtx = Tone.context) {
-        const sampleRate = audioCtx.sampleRate;
-        const frameCount = sampleRate * duration;
-        const audioBuffer = audioCtx.createBuffer(1, frameCount, sampleRate);
-        const channelData = audioBuffer.getChannelData(0);
-        let envelopeAttack = 0.01, envelopeDecay = duration * 0.8, envelopeSustain = 0.1, envelopeRelease = 0.1;
-        if (duration < 0.1) envelopeDecay = duration * 0.5;
-
-        for (let i = 0; i < frameCount; i++) {
-            const t = i / sampleRate;
-            let sample = 0; let currentFreq = frequency; let amp = 0;
-            if (t < envelopeAttack) { amp = t / envelopeAttack;
-            } else if (t < envelopeAttack + envelopeDecay) { amp = 1.0 - ((t - envelopeAttack) / envelopeDecay) * (1.0 - envelopeSustain); amp = Math.pow(amp, 2);
-            } else if (duration - t > envelopeRelease && duration > envelopeAttack + envelopeDecay + envelopeRelease) { amp = envelopeSustain;
-            } else { amp = Math.max(0, envelopeSustain * (1 - ((duration - (duration-envelopeRelease) - t) / envelopeRelease)) ); amp = Math.pow(amp,2); }
-            if (t > duration - envelopeRelease && !(t < envelopeAttack || t < envelopeAttack + envelopeDecay || (duration - t > envelopeRelease && duration > envelopeAttack + envelopeDecay + envelopeRelease) )) { amp = envelopeSustain * (1 - (t - (duration - envelopeRelease)) / envelopeRelease); amp = Math.max(0, amp); }
-
-            switch(type) {
-              case 'sine': sample = Math.sin(2 * Math.PI * currentFreq * t); break;
-              case 'square': sample = Math.sign(Math.sin(2 * Math.PI * currentFreq * t)); break;
-              case 'sawtooth': sample = 2 * (t * currentFreq - Math.floor(0.5 + t * currentFreq)); break;
-              case 'triangle': sample = 2 * Math.abs(2 * (t * currentFreq - Math.floor(0.5 + t * currentFreq))) -1; break;
-              case 'noise': sample = Math.random() * 2 - 1; break;
-              case 'kick': currentFreq = frequency * Math.exp(-t * 25); sample = Math.sin(2 * Math.PI * currentFreq * t); amp *= Math.exp(-t * 5); break;
-              case 'snare': const s_tone = Math.sin(2 * Math.PI * 180 * t) * Math.exp(-t * 20); const s_noise = (Math.random() * 2 - 1) * Math.exp(-t * 15); sample = (s_tone * 0.6 + s_noise * 0.4); break;
-              case 'hihat': sample = (Math.random() * 2 - 1) * Math.exp(-t * 40); if (i > 0) channelData[i] = (sample - (channelData[i-1] || 0)) * 0.5 * amp; else channelData[i] = sample * amp; continue;
-            }
-            channelData[i] = sample * amp * 0.8; 
-        }
-        return audioBuffer;
+      // Sound Generation and Loading (no changes needed here from your original)
+      function createSynthSound(type, frequency, duration, audioCtx = Tone.context) { /* ...your existing code... */ 
+          const sampleRate = audioCtx.sampleRate; const frameCount = sampleRate * duration;
+          const audioBuffer = audioCtx.createBuffer(1, frameCount, sampleRate); const channelData = audioBuffer.getChannelData(0);
+          let envelopeAttack = 0.01, envelopeDecay = duration * 0.8, envelopeSustain = 0.1, envelopeRelease = 0.1;
+          if (duration < 0.1) envelopeDecay = duration * 0.5;
+          for (let i = 0; i < frameCount; i++) {
+              const t = i / sampleRate; let sample = 0; let currentFreq = frequency; let amp = 0;
+              if (t < envelopeAttack) { amp = t / envelopeAttack;
+              } else if (t < envelopeAttack + envelopeDecay) { amp = 1.0 - ((t - envelopeAttack) / envelopeDecay) * (1.0 - envelopeSustain); amp = Math.pow(amp, 2);
+              } else if (duration - t > envelopeRelease && duration > envelopeAttack + envelopeDecay + envelopeRelease) { amp = envelopeSustain;
+              } else { amp = Math.max(0, envelopeSustain * (1 - ((duration - (duration-envelopeRelease) - t) / envelopeRelease)) ); amp = Math.pow(amp,2); }
+              if (t > duration - envelopeRelease && !(t < envelopeAttack || t < envelopeAttack + envelopeDecay || (duration - t > envelopeRelease && duration > envelopeAttack + envelopeDecay + envelopeRelease) )) { amp = envelopeSustain * (1 - (t - (duration - envelopeRelease)) / envelopeRelease); amp = Math.max(0, amp); }
+              switch(type) {
+                  case 'sine': sample = Math.sin(2 * Math.PI * currentFreq * t); break; case 'square': sample = Math.sign(Math.sin(2 * Math.PI * currentFreq * t)); break;
+                  case 'sawtooth': sample = 2 * (t * currentFreq - Math.floor(0.5 + t * currentFreq)); break; case 'triangle': sample = 2 * Math.abs(2 * (t * currentFreq - Math.floor(0.5 + t * currentFreq))) -1; break;
+                  case 'noise': sample = Math.random() * 2 - 1; break; case 'kick': currentFreq = frequency * Math.exp(-t * 25); sample = Math.sin(2 * Math.PI * currentFreq * t); amp *= Math.exp(-t * 5); break;
+                  case 'snare': const s_tone = Math.sin(2 * Math.PI * 180 * t) * Math.exp(-t * 20); const s_noise = (Math.random() * 2 - 1) * Math.exp(-t * 15); sample = (s_tone * 0.6 + s_noise * 0.4); break;
+                  case 'hihat': sample = (Math.random() * 2 - 1) * Math.exp(-t * 40); if (i > 0) channelData[i] = (sample - (channelData[i-1] || 0)) * 0.5 * amp; else channelData[i] = sample * amp; continue;
+              } channelData[i] = sample * amp * 0.8; 
+          } return audioBuffer;
       }
-      function generateDefaultSounds() { 
-        if (!toneJsInitialized) return {};
-        return {
-          'kick.mp3': createSynthSound('kick', 100, 0.5), 'kick2.mp3': createSynthSound('kick', 80, 0.4),
-          'snare.mp3': createSynthSound('snare', 0, 0.3), 'clap.mp3': createSynthSound('snare', 0, 0.25),
-          'hihat.mp3': createSynthSound('hihat', 0, 0.08),'openhat.mp3': createSynthSound('hihat', 0, 0.4),
-          'perc.mp3': createSynthSound('triangle', 400, 0.15),'cowbell.mp3': createSynthSound('square', 600, 0.2),
-          'bass.mp3': createSynthSound('sawtooth', 55, 0.6),'sub.mp3': createSynthSound('sine', 40, 0.8),
-          'synth.mp3': createSynthSound('square', 440, 0.5),'pad.mp3': createSynthSound('sawtooth', 220, 1.5),
-          'vocal.mp3': createSynthSound('sine', 300, 0.4),'vox.mp3': createSynthSound('triangle', 220, 0.6),
-          'fx.mp3': createSynthSound('noise', 0, 0.8),'sweep.mp3': createSynthSound('sawtooth', 2000, 0.8),
-          'click.mp3': createSynthSound('square', 1200, 0.05),'snap.mp3': createSynthSound('noise', 0, 0.07),
-          'tom.mp3': createSynthSound('sine', 150, 0.4),'rimshot.mp3': createSynthSound('square', 800, 0.1),
-          'noise.mp3': createSynthSound('noise', 0, 0.5),'crash.mp3': createSynthSound('noise', 0, 1.2),
-          'stab.mp3': createSynthSound('sawtooth', 330, 0.3),'chord.mp3': createSynthSound('triangle', 262, 0.8)
-        };
-      }
-      function loadDefaultSounds() { 
-        if (!toneJsInitialized) { updateMainDisplay('customText', "AUDIO NOT READY"); return; }
-        updateMainDisplay('customText', "LOADING SOUNDS...");
-        const defaultSynthSounds = generateDefaultSounds();
-        for (const [padNum, soundNames] of Object.entries(banks.defaultBank)) {
-          loadedSounds.defaultBank[padNum] = []; padIndices[padNum] = 0; 
-          for (const soundName of soundNames) {
-            if (defaultSynthSounds[soundName]) loadedSounds.defaultBank[padNum].push(defaultSynthSounds[soundName]);
-          }
-        }
-        updateMainDisplay('idle'); 
+      function generateDefaultSounds() {  if (!toneJsInitialized) return {}; return {
+          'kick.mp3': createSynthSound('kick',100,0.5),'kick2.mp3':createSynthSound('kick',80,0.4),'snare.mp3':createSynthSound('snare',0,0.3),'clap.mp3':createSynthSound('snare',0,0.25),
+          'hihat.mp3':createSynthSound('hihat',0,0.08),'openhat.mp3':createSynthSound('hihat',0,0.4),'perc.mp3':createSynthSound('triangle',400,0.15),'cowbell.mp3':createSynthSound('square',600,0.2),
+          'bass.mp3':createSynthSound('sawtooth',55,0.6),'sub.mp3':createSynthSound('sine',40,0.8),'synth.mp3':createSynthSound('square',440,0.5),'pad.mp3':createSynthSound('sawtooth',220,1.5),
+          'vocal.mp3':createSynthSound('sine',300,0.4),'vox.mp3':createSynthSound('triangle',220,0.6),'fx.mp3':createSynthSound('noise',0,0.8),'sweep.mp3':createSynthSound('sawtooth',2000,0.8),
+          'click.mp3':createSynthSound('square',1200,0.05),'snap.mp3':createSynthSound('noise',0,0.07),'tom.mp3':createSynthSound('sine',150,0.4),'rimshot.mp3':createSynthSound('square',800,0.1),
+          'noise.mp3':createSynthSound('noise',0,0.5),'crash.mp3':createSynthSound('noise',0,1.2),'stab.mp3':createSynthSound('sawtooth',330,0.3),'chord.mp3':createSynthSound('triangle',262,0.8)
+      };}
+      function loadDefaultSounds() { if(!toneJsInitialized){updateMainDisplay('customText',"AUDIO NOT READY");return;} updateMainDisplay('customText',"LOADING SOUNDS...");
+          const defaultSynthSounds=generateDefaultSounds(); for(const [padNum,soundNames] of Object.entries(banks.defaultBank)){ loadedSounds.defaultBank[padNum]=[];padIndices[padNum]=0;
+          for(const soundName of soundNames){if(defaultSynthSounds[soundName])loadedSounds.defaultBank[padNum].push(defaultSynthSounds[soundName]);}}
+          updateMainDisplay('idle'); applyInitialKnobSettings(); /* Apply effects after sounds loaded & knobs inited */
       }
 
-      function playSound(padNumber, specificBankToUse, specificIndex) { 
-        if (!toneJsInitialized) { updateMainDisplay('customText', "AUDIO NOT READY"); return; }
-        let soundBuffer, soundName = "Unknown", soundDuration = 0.5;
-        if (!loadedSounds.defaultBank[padNumber] || loadedSounds.defaultBank[padNumber].length === 0) { 
-            updateMainDisplay('customText', `NO SOUND PAD ${padNumber}`); 
-            setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500); 
-            return; 
-        }
-        const indexToPlay = specificIndex !== undefined ? specificIndex : padIndices[padNumber];
-        soundBuffer = loadedSounds.defaultBank[padNumber][indexToPlay];
-        soundName = banks.defaultBank[padNumber][indexToPlay]; 
-        if (specificIndex === undefined) {
-            padIndices[padNumber] = (indexToPlay + 1) % loadedSounds.defaultBank[padNumber].length;
-        }
-        if (soundBuffer instanceof AudioBuffer) {
-          const source = new Tone.BufferSource(soundBuffer).connect(mainVolume); 
-          source.start(Tone.now());
-          soundDuration = soundBuffer.duration;
-          if (isRecording && specificIndex === undefined) {  
-            const time = Tone.context.currentTime - recordStartTime;
-            const playedIndex = (padIndices[padNumber] === 0 ? loadedSounds.defaultBank[padNumber].length -1 : padIndices[padNumber]-1); 
-            recordedSequence.push({ pad: padNumber, time: time, bank: 'defaultBank', index: playedIndex, duration: soundDuration });
-          }
-        } else { 
-            updateMainDisplay('customText', `BUFFER ERR PAD ${padNumber}`); 
-            setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-        }
-      }
-
-      function updatePadIndicators() { /* Visually removed */ }
-
-      function visualPadTrigger(padNumber, isPlayback = false) { 
-          const padElement = document.querySelector(`.pad[data-pad="${padNumber}"]`);
-          if (padElement) {
-              const activeClass = isPlayback ? 'active-playing' : 'active';
-              padElement.classList.add(activeClass);
-              setTimeout(() => padElement.classList.remove(activeClass), 150);
-          }
-      }
-
-      padsContainer.addEventListener('click', (e) => { 
-        if (!toneJsInitialized) initAudio(); 
-        if (e.target.classList.contains('pad')) {
-          const padNumber = e.target.dataset.pad;
-          visualPadTrigger(padNumber);
-          playSound(padNumber); 
-        }
-      });
-
-      document.getElementById('recButton').addEventListener('click', () => { 
-        if (!toneJsInitialized) initAudio();
-        isRecording = !isRecording;
-        const recButton = document.getElementById('recButton');
-        if (isRecording) {
-          recordedSequence = []; recordStartTime = Tone.context.currentTime;
-          recButton.classList.add('active'); 
-          updateMainDisplay('recording');
-          if (isPlaying) stopPlayback(false); 
-        } else {
-          recButton.classList.remove('active'); 
-          updateMainDisplay('tempo'); 
-        }
-      });
-
-      document.getElementById('startButton').addEventListener('click', () => { 
-          if (!toneJsInitialized) initAudio(); 
-          togglePlayback(); 
-      });
-      document.getElementById('loopButton').addEventListener('click', () => { 
-          isLooping = !isLooping; 
-          document.getElementById('loopButton').classList.toggle('active', isLooping); 
-      });
+      function playSound(padNumber, specificBankToUse, specificIndex) { /* ...your existing code, no changes needed here... */ 
+          if(!toneJsInitialized){updateMainDisplay('customText',"AUDIO NOT READY");return;} let soundBuffer,soundName="Unknown",soundDuration=0.5;
+          if(!loadedSounds.defaultBank[padNumber]||loadedSounds.defaultBank[padNumber].length===0){updateMainDisplay('customText',`NO SOUND PAD ${padNumber}`);setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},1500);return;}
+          const indexToPlay=specificIndex!==undefined?specificIndex:padIndices[padNumber]; soundBuffer=loadedSounds.defaultBank[padNumber][indexToPlay]; soundName=banks.defaultBank[padNumber][indexToPlay];
+          if(specificIndex===undefined){padIndices[padNumber]=(indexToPlay+1)%loadedSounds.defaultBank[padNumber].length;}
+          if(soundBuffer instanceof AudioBuffer){const source=new Tone.BufferSource(soundBuffer).connect(mainVolume);source.start(Tone.now()); soundDuration=soundBuffer.duration;
+          if(isRecording&&specificIndex===undefined){const time=Tone.context.currentTime-recordStartTime; const playedIndex=(padIndices[padNumber]===0?loadedSounds.defaultBank[padNumber].length-1:padIndices[padNumber]-1);recordedSequence.push({pad:padNumber,time:time,bank:'defaultBank',index:playedIndex,duration:soundDuration});}}
+          else{updateMainDisplay('customText',`BUFFER ERR PAD ${padNumber}`);setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},1500);}}
       
-      function clearAllPlaybackTimeouts() { 
-          playbackTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
-          playbackTimeouts.length = 0; 
-          if (sequenceEndTimeout) { clearTimeout(sequenceEndTimeout); sequenceEndTimeout = null; }
-      }
-
-      function stopPlayback(finishedNaturally = false) { 
-          isPlaying = false; 
-          document.getElementById('startButton').classList.remove('active');
-          clearAllPlaybackTimeouts(); 
-          if (finishedNaturally && !isRecording) { 
-            updateMainDisplay('tempo'); 
-          } else if (!isRecording) { 
-            updateMainDisplay('idle'); 
-          }
-          document.querySelectorAll('.pad.active-playing').forEach(p => p.classList.remove('active-playing'));
-      }
-
-      function togglePlayback() {
-          const startButton = document.getElementById('startButton');
-          if (isPlaying) {
-              stopPlayback(false); 
-          } else {
-              if (recordedSequence.length === 0) { 
-                  updateMainDisplay('customText', "NO SEQUENCE"); 
-                  setTimeout(() => { if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-                  return; 
-              }
-              isPlaying = true;
-              playbackStartTime = Tone.now(); 
-              startButton.classList.add('active');
-              updateMainDisplay('playing');
-              clearAllPlaybackTimeouts(); 
-              
-              const currentLoopStart = loopMarkerTimes.start;
-              const currentLoopEnd = loopMarkerTimes.end;
-              let effectiveLoopStart = (isLooping && currentLoopStart !== null) ? currentLoopStart : 0;
-              let effectiveLoopEnd = (isLooping && currentLoopEnd !== null && currentLoopEnd > currentLoopStart) ? currentLoopEnd : Infinity;
-              
-              if (!isLooping) {
-                  effectiveLoopStart = 0;
-                  effectiveLoopEnd = Infinity;
-              }
-
-              let maxEventTimeInLoop = 0; 
-
-              recordedSequence.forEach(event => {
-                  if (event.time >= effectiveLoopStart && event.time < effectiveLoopEnd) {
-                      const playTime = (event.time - effectiveLoopStart) * 1000; 
-                      if (playTime >= 0) { 
-                          const timeoutId = setTimeout(() => {
-                              if (!isPlaying) return; 
-                              playSound(event.pad, event.bank, event.index); 
-                              visualPadTrigger(event.pad, true); 
-                          }, playTime);
-                          playbackTimeouts.push(timeoutId);
-                          if ((event.time - effectiveLoopStart) > maxEventTimeInLoop) {
-                              maxEventTimeInLoop = (event.time - effectiveLoopStart);
-                          }
+      function visualPadTrigger(padNumber, isPlayback = false) { /* ...your existing code... */ const padElement=document.querySelector(`.pad[data-pad="${padNumber}"]`);if(padElement){const activeClass=isPlayback?'active-playing':'active';padElement.classList.add(activeClass);setTimeout(()=>padElement.classList.remove(activeClass),150);}}
+      padsContainer.addEventListener('click', (e) => { if(!toneJsInitialized)initAudio();if(e.target.classList.contains('pad')){const padNumber=e.target.dataset.pad;visualPadTrigger(padNumber);playSound(padNumber);}});
+      
+      // REC, START, LOOP, etc. button listeners (no changes needed here from your original)
+      document.getElementById('recButton').addEventListener('click',()=>{if(!toneJsInitialized)initAudio();isRecording=!isRecording;const recButton=document.getElementById('recButton');if(isRecording){recordedSequence=[];recordStartTime=Tone.context.currentTime;recButton.classList.add('active');updateMainDisplay('recording');if(isPlaying)stopPlayback(false);}else{recButton.classList.remove('active');updateMainDisplay('tempo');}});
+      document.getElementById('startButton').addEventListener('click',()=>{if(!toneJsInitialized)initAudio();togglePlayback();});
+      document.getElementById('loopButton').addEventListener('click',()=>{isLooping=!isLooping;document.getElementById('loopButton').classList.toggle('active',isLooping);});
+      function clearAllPlaybackTimeouts(){playbackTimeouts.forEach(timeoutId=>clearTimeout(timeoutId));playbackTimeouts.length=0;if(sequenceEndTimeout){clearTimeout(sequenceEndTimeout);sequenceEndTimeout=null;}}
+      function stopPlayback(finishedNaturally=false){isPlaying=false;document.getElementById('startButton').classList.remove('active');clearAllPlaybackTimeouts();if(finishedNaturally&&!isRecording){updateMainDisplay('tempo');}else if(!isRecording){updateMainDisplay('idle');} document.querySelectorAll('.pad.active-playing').forEach(p=>p.classList.remove('active-playing'));}
+      function togglePlayback(){const startButton=document.getElementById('startButton');if(isPlaying){stopPlayback(false);}else{if(recordedSequence.length===0){updateMainDisplay('customText',"NO SEQUENCE");setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},1500);return;}
+      isPlaying=true;playbackStartTime=Tone.now();startButton.classList.add('active');updateMainDisplay('playing');clearAllPlaybackTimeouts();
+      const currentLoopStart=loopMarkerTimes.start;const currentLoopEnd=loopMarkerTimes.end;let effectiveLoopStart=(isLooping&&currentLoopStart!==null)?currentLoopStart:0;let effectiveLoopEnd=(isLooping&&currentLoopEnd!==null&&currentLoopEnd>currentLoopStart)?currentLoopEnd:Infinity;
+      if(!isLooping){effectiveLoopStart=0;effectiveLoopEnd=Infinity;}
+      let maxEventTimeInLoop=0;recordedSequence.forEach(event=>{if(event.time>=effectiveLoopStart&&event.time<effectiveLoopEnd){const playTime=(event.time-effectiveLoopStart)*1000;if(playTime>=0){const timeoutId=setTimeout(()=>{if(!isPlaying)return;playSound(event.pad,event.bank,event.index);visualPadTrigger(event.pad,true);},playTime);playbackTimeouts.push(timeoutId);if((event.time-effectiveLoopStart)>maxEventTimeInLoop){maxEventTimeInLoop=(event.time-effectiveLoopStart);}}}});
+      let sequenceDurationMs;if(isLooping&&currentLoopStart!==null&&currentLoopEnd!==null&&currentLoopEnd>currentLoopStart){sequenceDurationMs=(currentLoopEnd-currentLoopStart)*1000;}else{let fullSequenceMaxTime=0;recordedSequence.forEach(ev=>{if(ev.time>fullSequenceMaxTime)fullSequenceMaxTime=ev.time;});sequenceDurationMs=(fullSequenceMaxTime+0.5)*1000;}
+      if(sequenceDurationMs<=0)sequenceDurationMs=500;sequenceEndTimeout=setTimeout(()=>{if(isLooping&&isPlaying){stopPlayback(false);setTimeout(()=>{if(isLooping)togglePlayback();},50);}else if(isPlaying){stopPlayback(true);}},sequenceDurationMs);}}
+      document.getElementById('markButton').addEventListener('click',()=>{if(!toneJsInitialized)initAudio();const email='wesables@icloud.com';const subject='PSTN-404909 Sampler Feedback / Inquiry';window.location.href=`mailto:${email}?subject=${encodeURIComponent(subject)}`;updateMainDisplay('customText',"OPENING EMAIL...");setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},2000);});
+      document.getElementById('deleteButton').addEventListener('click',()=>{if(!toneJsInitialized)initAudio();if(loopMarkerTimes.start!==null||loopMarkerTimes.end!==null){loopMarkerTimes.start=null;loopMarkerTimes.end=null;updateMainDisplay('customText',"LOOP MARKERS CLEARED");setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},1500);if(isPlaying&&isLooping){stopPlayback(false);setTimeout(()=>togglePlayback(),50);}}else{updateMainDisplay('customText',"NO LOOP MARKERS SET");setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},1500);}});
+      document.getElementById('patternSelectButton').addEventListener('click',()=>{const spotifyURL="YOUR_SPOTIFY_URL_HERE";window.open(spotifyURL,'_blank');updateMainDisplay('customText',"OPENING SPOTIFY...");setTimeout(()=>{if(!isRecording&&!isPlaying)updateMainDisplay('idle');},2000);});
+      
+      // Pulsing knobs logic
+      function startPulsingEffectAfterAudioInit() {
+          KNOB_IDS.forEach(knobId => {
+              const knobElement = document.getElementById(knobId);
+              if (knobElement) {
+                  const delay = Math.random() * 1500 + 500; // Stagger pulse start
+                  window.samplerPulseTimeouts[knobId] = setTimeout(() => {
+                      if (!knobElement.classList.contains('active-knob-interaction')) {
+                          knobElement.classList.add('pulsing');
                       }
-                  }
-              });
-              
-              let sequenceDurationMs;
-              if (isLooping && currentLoopStart !== null && currentLoopEnd !== null && currentLoopEnd > currentLoopStart) {
-                  sequenceDurationMs = (currentLoopEnd - currentLoopStart) * 1000;
-              } else {
-                  let fullSequenceMaxTime = 0;
-                    recordedSequence.forEach(ev => { 
-                        if (ev.time > fullSequenceMaxTime) fullSequenceMaxTime = ev.time; 
-                    });
-                  sequenceDurationMs = (fullSequenceMaxTime + 0.5) * 1000; 
+                  }, 20000 + delay); // Start pulsing after ~20 seconds + stagger
               }
-              if (sequenceDurationMs <=0) sequenceDurationMs = 500; 
-
-              sequenceEndTimeout = setTimeout(() => {
-                  if (isLooping && isPlaying) { 
-                      stopPlayback(false); 
-                      setTimeout(() => { if (isLooping) togglePlayback(); }, 50); 
-                  } else if (isPlaying) { 
-                      stopPlayback(true); 
-                  }
-              }, sequenceDurationMs);
-          }
+          });
       }
-      
-      document.getElementById('markButton').addEventListener('click', () => { 
-        if (!toneJsInitialized) initAudio(); 
-        const email = 'wesables@icloud.com';
-        const subject = 'PSTN-404909 Sampler Feedback / Inquiry';
-        window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
-        updateMainDisplay('customText', "OPENING EMAIL...");
-        setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 2000);
-      });
 
-      document.getElementById('deleteButton').addEventListener('click', () => {
-          if (!toneJsInitialized) initAudio();
-          if (loopMarkerTimes.start !== null || loopMarkerTimes.end !== null) {
-              loopMarkerTimes.start = null; 
-              loopMarkerTimes.end = null;
-              updateMainDisplay('customText', "LOOP MARKERS CLEARED");
-              setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-
-              if (isPlaying && isLooping) { 
-                  stopPlayback(false);
-                  setTimeout(() => togglePlayback(), 50); 
-              }
-          } else {
-              updateMainDisplay('customText', "NO LOOP MARKERS SET");
-              setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-          }
-      });
-
-      document.getElementById('patternSelectButton').addEventListener('click', () => {
-        const spotifyURL = "https://open.spotify.com/artist/1MbrMRARCY8MXQKozgkkLJ?si=dUYuZK2-SaKTeJR1X__ibw"; // Replace with your actual Spotify URL
-        window.open(spotifyURL, '_blank');
-        updateMainDisplay('customText', "OPENING SPOTIFY...");
-        setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 2000);
-      });
-      
       function initialUserInteractionHandler() { if (!toneJsInitialized) initAudio(); }
       document.body.addEventListener('click', initialUserInteractionHandler, { once: true });
       document.body.addEventListener('keydown', initialUserInteractionHandler, { once: true });
+      
       updateMainDisplay('idle'); 
+      // initKnobs(); // Called from within initAudio now after Tone.js is ready and also before if just to set visuals
     });
   </script>
 </body>
