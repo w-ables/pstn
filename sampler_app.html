@@ -458,23 +458,86 @@
         setupKnob('fxVolumeKnob', parseFloat(document.getElementById('fxVolumeKnob').dataset.value) || 0, applyKnobEffect);
       }
 
-      function setupKnob(id, initialValue, callback) {
-        const knob = document.getElementById(id);
-        if (!knob) return;
-        knob.dataset.value = initialValue; 
-        updateKnobVisual(knob, initialValue); 
-        let isDragging = false;
-        let startY, startValue;
-        knob.addEventListener('mousedown', (e) => {
-          if (!toneJsInitialized) initAudio(); 
-          isDragging = true;
-          startY = e.clientY;
-          startValue = parseFloat(knob.dataset.value);
-          knob.style.cursor = 'grabbing';
-          document.addEventListener('mousemove', handleDrag);
-          document.addEventListener('mouseup', stopDrag);
-          e.preventDefault();
-        });
+ // INSIDE sampler_app.html -> <script>
+function setupKnob(id, initialValue, callback) {
+    const knob = document.getElementById(id);
+    if (!knob) return;
+    knob.dataset.value = initialValue;
+    updateKnobVisual(knob, initialValue);
+    let isDragging = false;
+    let startY, startValue;
+
+    // Mouse Event Handlers (already there)
+    function handleMouseDown(e) {
+        if (!toneJsInitialized) initAudio();
+        isDragging = true;
+        startY = e.clientY; // For mouse
+        startValue = parseFloat(knob.dataset.value);
+        knob.style.cursor = 'grabbing';
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        e.preventDefault();
+    }
+
+    function handleMouseMove(e) {
+        if (!isDragging) return;
+        const deltaY = startY - e.clientY; // For mouse
+        let newValue = startValue + (deltaY / 1.5);
+        newValue = Math.max(0, Math.min(100, Math.round(newValue)));
+        knob.dataset.value = newValue;
+        updateKnobVisual(knob, newValue);
+        if (callback) callback(id, newValue);
+    }
+
+    function handleMouseUp() {
+        isDragging = false;
+        knob.style.cursor = 'grab';
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+    }
+
+    // Touch Event Handlers (NEW)
+    function handleTouchStart(e) {
+        if (!toneJsInitialized) initAudio();
+        isDragging = true;
+        // For touch, clientY is on the touch object
+        startY = e.touches[0].clientY;
+        startValue = parseFloat(knob.dataset.value);
+        // No cursor style change needed for touch generally
+        document.addEventListener('touchmove', handleTouchMove, { passive: false }); // passive: false to allow preventDefault
+        document.addEventListener('touchend', handleTouchEnd);
+        document.addEventListener('touchcancel', handleTouchEnd); // Handle abrupt touch ends
+        e.preventDefault(); // Prevent page scroll while dragging knob
+    }
+
+    function handleTouchMove(e) {
+        if (!isDragging) return;
+        const deltaY = startY - e.touches[0].clientY; // For touch
+        let newValue = startValue + (deltaY / 1.5);
+        newValue = Math.max(0, Math.min(100, Math.round(newValue)));
+        knob.dataset.value = newValue;
+        updateKnobVisual(knob, newValue);
+        if (callback) callback(id, newValue);
+        e.preventDefault(); // Prevent page scroll while dragging knob
+    }
+
+    function handleTouchEnd() {
+        isDragging = false;
+        document.removeEventListener('touchmove', handleTouchMove);
+        document.removeEventListener('touchend', handleTouchEnd);
+        document.removeEventListener('touchcancel', handleTouchEnd);
+    }
+
+    // Add Mouse Listeners
+    knob.addEventListener('mousedown', handleMouseDown);
+
+    // Add Touch Listeners
+    knob.addEventListener('touchstart', handleTouchStart, { passive: false });
+
+
+    // Apply initial value if audio is already initialized
+    if (callback && toneJsInitialized) callback(id, initialValue);
+}
         function handleDrag(e) {
           if (!isDragging) return;
           const deltaY = startY - e.clientY; 
