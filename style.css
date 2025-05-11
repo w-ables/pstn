@@ -1,144 +1,151 @@
 body {
     margin: 0;
     font-family: 'Merriweather', serif;
-    background-color: #F3EADA; /* Beige background from your design */
-    color: #333333; /* Dark text color for readability */
+    background-color: #F3EADA; /* Main page background - REMAINS THE SAME */
+    color: #333333;
     line-height: 1.6;
 }
 
 .site-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 20px; /* Ensures some space around the content on very wide screens */
 }
 
 /* Sampler Section - The iframe will take care of the sampler's internal styling */
 .sampler-section {
-    margin-bottom: 30px;
-    /* The iframe itself is centered via its style attribute in the HTML */
+    margin-bottom: 30px; /* Space between sampler and the new card */
 }
 
-.page-header {
+/* NEW Info Card Styles */
+.info-card {
+    background-color: #FBF9F3; /* Slightly lighter yellow/beige for the card itself, adjust if needed */
+    padding: 25px;
+    border-radius: 8px; /* Optional: slightly rounded corners for the card */
+    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); Optional: a very subtle shadow for card effect */
+    max-width: 750px; /* Max width for the card content area */
+    margin: 0 auto; /* Center the card */
+}
+
+.card-top-text {
     font-family: 'Open Sans', sans-serif;
-    font-size: 1em;
-    color: #555; /* Subdued color for the top text */
-    text-align: left;
-    margin-bottom: 40px;
+    font-size: 0.95em;
+    color: #505050;
+    text-align: left; /* As per screenshot */
+    margin-bottom: 20px;
 }
 
-.content-wrapper {
-    /* Styles for the main content area below the sampler */
+.spotify-embed-card {
+    margin-bottom: 25px;
 }
 
-.spotify-and-title {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 30px;
-    margin-bottom: 40px;
-    align-items: flex-start; /* Align items to the top */
+.spotify-embed-card iframe { /* Style the iframe from Spotify if needed */
+    border-radius: 12px !important; /* Override Spotify's default if necessary */
+    width: 100%;
 }
 
-.spotify-embed {
-    flex: 1 1 300px; /* Flex properties for sizing */
-    max-width: 380px; /* Max width for the Spotify embed */
-}
 
-.main-headings {
-    flex: 2 1 400px; /* Flex properties for sizing */
-}
-
-.main-headings h1 {
+.card-main-headings h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 3.5em; /* Large heading */
+    font-size: 3.2em; /* Adjusted for card context */
     font-weight: 700;
     color: #2c2c2c;
     margin-top: 0;
-    margin-bottom: 0.2em;
+    margin-bottom: 0.1em; /* Tighter spacing */
     line-height: 1.1;
 }
 
-.main-headings h2 {
-    font-family: 'Merriweather', serif;
-    font-size: 1.4em;
-    font-weight: normal;
+.card-main-headings h2 {
+    font-family: 'Merriweather', serif; /* Screenshot uses serif here */
+    font-size: 1.3em; /* Adjusted for card context */
+    font-weight: normal; /* Not bold in screenshot for this one */
     color: #454545;
     margin-top: 0;
-    margin-bottom: 1em;
+    margin-bottom: 1.2em;
 }
 
-.about-section p {
-    font-size: 1.1em;
-    max-width: 700px; /* Readable line length */
-    margin-bottom: 40px;
+.card-bio {
+    font-family: 'Merriweather', serif; /* Explicitly set for card bio */
+    font-size: 1.05em; /* Slightly adjusted */
+    color: #333;
+    line-height: 1.7;
+    margin-bottom: 30px;
 }
 
-.contact-details {
+.card-details-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 40px; /* Space between location and contact */
-    margin-top: 30px;
+    gap: 30px 40px; /* Row and column gap */
+    margin-top: 20px;
+    border-top: 1px solid #E0DACE; /* Optional: a subtle separator line */
+    padding-top: 20px;
 }
 
-.detail-item {
+.card-detail-item {
     flex: 1;
-    min-width: 150px; /* Ensure they don't get too squished */
+    min-width: 150px;
 }
 
-.detail-item h3 {
+.card-detail-item h3 {
     font-family: 'Open Sans', sans-serif;
-    font-size: 1.2em;
+    font-size: 1.1em; /* Adjusted for card context */
     font-weight: 600;
     color: #333;
-    margin-bottom: 0.3em;
+    margin-bottom: 0.2em;
 }
 
-.detail-item p {
+.card-detail-item p {
+    font-family: 'Merriweather', serif; /* Consistent with bio text */
     font-size: 1em;
+    color: #454545;
     margin: 0;
 }
 
-/* Mobile Responsiveness */
+/* REMOVE or COMMENT OUT these old styles as they are now handled by .info-card or its children */
+/*
+.page-header { ... }
+.spotify-and-title { ... }
+.spotify-embed { ... }
+.main-headings { ... } (note: .card-main-headings is the new selector)
+.main-headings h1 { ... }
+.main-headings h2 { ... }
+.about-section p { ... } (note: .card-bio is the new selector)
+.contact-details { ... } (note: .card-details-grid is the new selector)
+.detail-item { ... } (note: .card-detail-item is the new selector)
+.detail-item h3 { ... }
+.detail-item p { ... }
+*/
+
+
+/* Mobile Responsiveness - Adjusting for the card context */
 @media (max-width: 768px) {
-    .main-headings h1 {
-        font-size: 2.8em;
+    .info-card {
+        padding: 20px;
     }
-    .main-headings h2 {
-        font-size: 1.2em;
+    .card-main-headings h1 {
+        font-size: 2.5em; /* Adjusted for card on mobile */
     }
-    .spotify-and-title {
-        flex-direction: column; /* Stack Spotify and title on mobile */
-        align-items: center; /* Center items when stacked */
+    .card-main-headings h2 {
+        font-size: 1.15em; /* Adjusted for card on mobile */
     }
-    .spotify-embed {
-        width: 100%;
-        max-width: 350px; /* Control Spotify embed size on mobile */
-        margin-bottom: 20px;
-    }
-    .main-headings {
-        text-align: center; /* Center headings on mobile */
-    }
-    .about-section p {
+    .card-bio {
         font-size: 1em;
     }
-    .contact-details {
-        flex-direction: column; /* Stack contact details */
-        align-items: flex-start; /* Align to left when stacked */
+    .card-details-grid {
+        flex-direction: column; /* Stack location and contact */
         gap: 20px;
+        align-items: flex-start;
     }
-    .page-header {
-        text-align: center;
-        margin-bottom: 20px;
+    .spotify-embed-card { /* Ensure Spotify embed behaves well */
+        max-width: 100%;
     }
 }
 
 @media (max-width: 480px) {
-    .main-headings h1 {
-        font-size: 2.2em;
+    .card-main-headings h1 {
+        font-size: 2em;
     }
-    .main-headings h2 {
-        font-size: 1em;
-    }
-     .site-container {
+     .info-card {
         padding: 15px;
     }
 }
