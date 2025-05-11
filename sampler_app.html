@@ -6,20 +6,22 @@
   <title>PSTN-404909 Sampler</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet"> 
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <style>
+    /* MODIFIED BODY STYLE FOR SEAMLESS IFRAME INTEGRATION */
     body {
       font-family: 'Arial', sans-serif;
-      background-color: #1a1a1a; 
+      background-color: transparent; /* Makes iframe background transparent */
       margin: 0;
-      padding: 20px;
-      display: flex;
+      padding: 0; /* No padding on the body of the iframe content */
+      display: flex; /* Still useful to center the .sampler div */
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      color: white; 
+      /* min-height: 100vh; /* This line is commented out or removed to prevent iframe scroll issues with fixed height */
+      color: white; /* Default for any stray text, though sampler has its own colors */
     }
     
+    /* YOUR EXISTING SAMPLER AND OTHER STYLES START HERE - UNCHANGED */
     .sampler {
       background-color: #35C6F2; 
       border-radius: 10px; 
@@ -129,7 +131,7 @@
         font-weight: bold;
         text-shadow: 0 0 5px rgba(255, 140, 0, 0.7);
         z-index: 3; 
-        background-color: rgba(10, 10, 10, 0.9); /* Slightly more opaque for better readability */
+        background-color: rgba(10, 10, 10, 0.9);
         opacity: 0; 
         transition: opacity 0.2s ease-in-out;
         padding: 5px;
@@ -286,7 +288,7 @@
       }
       .pad { font-size: 15px; }
       .button { font-size: 8px; padding: 5px 3px; min-height: 30px;}
-      .display-default-text { font-size: 18px; } /* Adjust default text size for mobile */
+      .display-default-text { font-size: 18px; }
       .display-status-overlay { font-size: 22px; }
       .display-status-overlay .bpm-value { font-size: 38px; }
       .display-status-overlay .bpm-label { font-size: 14px; }
@@ -423,8 +425,6 @@
                     statusDisplayTextEl.innerHTML = textContent;
                     statusDisplayTextEl.classList.add('visible');
                   }
-                  // Optional: Timeout for custom text if it's meant to be temporary
-                  // displayStateTimeout = setTimeout(() => updateMainDisplay('idle'), 2000);
                   break;
           }
       }
@@ -436,348 +436,3 @@
           await Tone.start(); 
           mainVolume = new Tone.Gain(0.8); 
           feedbackDelay = new Tone.FeedbackDelay({ delayTime: "8n.", feedback: 0.0, maxDelay: 1.0 });
-          reverb = new Tone.Reverb({ decay: 1.5, preDelay: 0.01 });
-          fxCrossFade = new Tone.CrossFade(0); 
-          mainVolume.connect(fxCrossFade.a); 
-          mainVolume.chain(feedbackDelay, reverb, fxCrossFade.b); 
-          fxCrossFade.toDestination(); 
-          toneJsInitialized = true;
-          updateMainDisplay('idle'); 
-          loadDefaultSounds(); 
-          initKnobs(); 
-        } catch (e) {
-          console.error("Error initializing Tone.js or Web Audio:", e);
-          updateMainDisplay('customText', "AUDIO ERROR");
-        }
-      }
-
-      function initKnobs() {
-        setupKnob('volumeKnob', parseFloat(document.getElementById('volumeKnob').dataset.value) || 80, applyKnobEffect);
-        setupKnob('echoFeedbackKnob', parseFloat(document.getElementById('echoFeedbackKnob').dataset.value) || 0, applyKnobEffect); 
-        setupKnob('reverbDecayKnob', parseFloat(document.getElementById('reverbDecayKnob').dataset.value) || 30, applyKnobEffect);
-        setupKnob('fxVolumeKnob', parseFloat(document.getElementById('fxVolumeKnob').dataset.value) || 0, applyKnobEffect);
-      }
-
-      function setupKnob(id, initialValue, callback) {
-        const knob = document.getElementById(id);
-        if (!knob) return;
-        knob.dataset.value = initialValue; 
-        updateKnobVisual(knob, initialValue); 
-        let isDragging = false;
-        let startY, startValue;
-        knob.addEventListener('mousedown', (e) => {
-          if (!toneJsInitialized) initAudio(); 
-          isDragging = true;
-          startY = e.clientY;
-          startValue = parseFloat(knob.dataset.value);
-          knob.style.cursor = 'grabbing';
-          document.addEventListener('mousemove', handleDrag);
-          document.addEventListener('mouseup', stopDrag);
-          e.preventDefault();
-        });
-        function handleDrag(e) {
-          if (!isDragging) return;
-          const deltaY = startY - e.clientY; 
-          let newValue = startValue + (deltaY / 1.5); 
-          newValue = Math.max(0, Math.min(100, Math.round(newValue))); 
-          knob.dataset.value = newValue;
-          updateKnobVisual(knob, newValue);
-          if (callback) callback(id, newValue);
-        }
-        function stopDrag() {
-          isDragging = false;
-          knob.style.cursor = 'grab';
-          document.removeEventListener('mousemove', handleDrag);
-          document.removeEventListener('mouseup', stopDrag);
-        }
-        if (callback && toneJsInitialized) callback(id, initialValue); 
-      }
-
-      function updateKnobVisual(knobElement, value) {
-        const maxRotation = 270; 
-        const rotation = (value / 100) * maxRotation - (maxRotation / 2);
-        knobElement.style.setProperty('--knob-rotation-dynamic', rotation + 'deg');
-      }
-      
-      function applyKnobEffect(id, value) {
-        if (!toneJsInitialized) return;
-        const normalizedValue = value / 100; 
-        switch(id) {
-          case 'volumeKnob':
-            if (mainVolume) mainVolume.gain.value = normalizedValue * normalizedValue; 
-            break;
-          case 'echoFeedbackKnob': 
-            if (feedbackDelay) feedbackDelay.feedback.value = normalizedValue * 0.85; 
-            break;
-          case 'reverbDecayKnob': 
-            const minDecay = 0.1; const maxDecay = 8.0;
-            if (reverb) reverb.decay = minDecay + (maxDecay - minDecay) * normalizedValue;
-            break;
-          case 'fxVolumeKnob': 
-            if (fxCrossFade) fxCrossFade.fade.value = normalizedValue; 
-            break;
-        }
-      }
-
-      function createSynthSound(type, frequency, duration, audioCtx = Tone.context) {
-        const sampleRate = audioCtx.sampleRate;
-        const frameCount = sampleRate * duration;
-        const audioBuffer = audioCtx.createBuffer(1, frameCount, sampleRate);
-        const channelData = audioBuffer.getChannelData(0);
-        let envelopeAttack = 0.01, envelopeDecay = duration * 0.8, envelopeSustain = 0.1, envelopeRelease = 0.1;
-        if (duration < 0.1) envelopeDecay = duration * 0.5;
-
-        for (let i = 0; i < frameCount; i++) {
-            const t = i / sampleRate;
-            let sample = 0; let currentFreq = frequency; let amp = 0;
-            if (t < envelopeAttack) { amp = t / envelopeAttack;
-            } else if (t < envelopeAttack + envelopeDecay) { amp = 1.0 - ((t - envelopeAttack) / envelopeDecay) * (1.0 - envelopeSustain); amp = Math.pow(amp, 2);
-            } else if (duration - t > envelopeRelease && duration > envelopeAttack + envelopeDecay + envelopeRelease) { amp = envelopeSustain;
-            } else { amp = Math.max(0, envelopeSustain * (1 - ((duration - (duration-envelopeRelease) - t) / envelopeRelease)) ); amp = Math.pow(amp,2); }
-            if (t > duration - envelopeRelease && !(t < envelopeAttack || t < envelopeAttack + envelopeDecay || (duration - t > envelopeRelease && duration > envelopeAttack + envelopeDecay + envelopeRelease) )) { amp = envelopeSustain * (1 - (t - (duration - envelopeRelease)) / envelopeRelease); amp = Math.max(0, amp); }
-
-            switch(type) {
-              case 'sine': sample = Math.sin(2 * Math.PI * currentFreq * t); break;
-              case 'square': sample = Math.sign(Math.sin(2 * Math.PI * currentFreq * t)); break;
-              case 'sawtooth': sample = 2 * (t * currentFreq - Math.floor(0.5 + t * currentFreq)); break;
-              case 'triangle': sample = 2 * Math.abs(2 * (t * currentFreq - Math.floor(0.5 + t * currentFreq))) -1; break;
-              case 'noise': sample = Math.random() * 2 - 1; break;
-              case 'kick': currentFreq = frequency * Math.exp(-t * 25); sample = Math.sin(2 * Math.PI * currentFreq * t); amp *= Math.exp(-t * 5); break;
-              case 'snare': const s_tone = Math.sin(2 * Math.PI * 180 * t) * Math.exp(-t * 20); const s_noise = (Math.random() * 2 - 1) * Math.exp(-t * 15); sample = (s_tone * 0.6 + s_noise * 0.4); break;
-              case 'hihat': sample = (Math.random() * 2 - 1) * Math.exp(-t * 40); if (i > 0) channelData[i] = (sample - (channelData[i-1] || 0)) * 0.5 * amp; else channelData[i] = sample * amp; continue;
-            }
-            channelData[i] = sample * amp * 0.8; 
-        }
-        return audioBuffer;
-      }
-      function generateDefaultSounds() { 
-        if (!toneJsInitialized) return {};
-        return {
-          'kick.mp3': createSynthSound('kick', 100, 0.5), 'kick2.mp3': createSynthSound('kick', 80, 0.4),
-          'snare.mp3': createSynthSound('snare', 0, 0.3), 'clap.mp3': createSynthSound('snare', 0, 0.25),
-          'hihat.mp3': createSynthSound('hihat', 0, 0.08),'openhat.mp3': createSynthSound('hihat', 0, 0.4),
-          'perc.mp3': createSynthSound('triangle', 400, 0.15),'cowbell.mp3': createSynthSound('square', 600, 0.2),
-          'bass.mp3': createSynthSound('sawtooth', 55, 0.6),'sub.mp3': createSynthSound('sine', 40, 0.8),
-          'synth.mp3': createSynthSound('square', 440, 0.5),'pad.mp3': createSynthSound('sawtooth', 220, 1.5),
-          'vocal.mp3': createSynthSound('sine', 300, 0.4),'vox.mp3': createSynthSound('triangle', 220, 0.6),
-          'fx.mp3': createSynthSound('noise', 0, 0.8),'sweep.mp3': createSynthSound('sawtooth', 2000, 0.8),
-          'click.mp3': createSynthSound('square', 1200, 0.05),'snap.mp3': createSynthSound('noise', 0, 0.07),
-          'tom.mp3': createSynthSound('sine', 150, 0.4),'rimshot.mp3': createSynthSound('square', 800, 0.1),
-          'noise.mp3': createSynthSound('noise', 0, 0.5),'crash.mp3': createSynthSound('noise', 0, 1.2),
-          'stab.mp3': createSynthSound('sawtooth', 330, 0.3),'chord.mp3': createSynthSound('triangle', 262, 0.8)
-        };
-      }
-      function loadDefaultSounds() { 
-        if (!toneJsInitialized) { updateMainDisplay('customText', "AUDIO NOT READY"); return; }
-        updateMainDisplay('customText', "LOADING SOUNDS...");
-        const defaultSynthSounds = generateDefaultSounds();
-        for (const [padNum, soundNames] of Object.entries(banks.defaultBank)) {
-          loadedSounds.defaultBank[padNum] = []; padIndices[padNum] = 0; 
-          for (const soundName of soundNames) {
-            if (defaultSynthSounds[soundName]) loadedSounds.defaultBank[padNum].push(defaultSynthSounds[soundName]);
-          }
-        }
-        updateMainDisplay('idle'); // Revert to idle (showing "public spreads the news")
-      }
-
-      function playSound(padNumber, specificBankToUse, specificIndex) { 
-        if (!toneJsInitialized) { updateMainDisplay('customText', "AUDIO NOT READY"); return; }
-        let soundBuffer, soundName = "Unknown", soundDuration = 0.5;
-        if (!loadedSounds.defaultBank[padNumber] || loadedSounds.defaultBank[padNumber].length === 0) { 
-            updateMainDisplay('customText', `NO SOUND PAD ${padNumber}`); 
-            setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500); 
-            return; 
-        }
-        const indexToPlay = specificIndex !== undefined ? specificIndex : padIndices[padNumber];
-        soundBuffer = loadedSounds.defaultBank[padNumber][indexToPlay];
-        soundName = banks.defaultBank[padNumber][indexToPlay]; 
-        if (specificIndex === undefined) {
-            padIndices[padNumber] = (indexToPlay + 1) % loadedSounds.defaultBank[padNumber].length;
-        }
-        if (soundBuffer instanceof AudioBuffer) {
-          const source = new Tone.BufferSource(soundBuffer).connect(mainVolume); 
-          source.start(Tone.now());
-          soundDuration = soundBuffer.duration;
-          if (isRecording && specificIndex === undefined) {  
-            const time = Tone.context.currentTime - recordStartTime;
-            const playedIndex = (padIndices[padNumber] === 0 ? loadedSounds.defaultBank[padNumber].length -1 : padIndices[padNumber]-1); 
-            recordedSequence.push({ pad: padNumber, time: time, bank: 'defaultBank', index: playedIndex, duration: soundDuration });
-          }
-        } else { 
-            updateMainDisplay('customText', `BUFFER ERR PAD ${padNumber}`); 
-            setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-        }
-      }
-
-      function updatePadIndicators() { /* Visually removed */ }
-
-      function visualPadTrigger(padNumber, isPlayback = false) { 
-          const padElement = document.querySelector(`.pad[data-pad="${padNumber}"]`);
-          if (padElement) {
-              const activeClass = isPlayback ? 'active-playing' : 'active';
-              padElement.classList.add(activeClass);
-              setTimeout(() => padElement.classList.remove(activeClass), 150);
-          }
-      }
-
-      padsContainer.addEventListener('click', (e) => { 
-        if (!toneJsInitialized) initAudio(); 
-        if (e.target.classList.contains('pad')) {
-          const padNumber = e.target.dataset.pad;
-          visualPadTrigger(padNumber);
-          playSound(padNumber); 
-        }
-      });
-
-      document.getElementById('recButton').addEventListener('click', () => { 
-        if (!toneJsInitialized) initAudio();
-        isRecording = !isRecording;
-        const recButton = document.getElementById('recButton');
-        if (isRecording) {
-          recordedSequence = []; recordStartTime = Tone.context.currentTime;
-          recButton.classList.add('active'); 
-          updateMainDisplay('recording');
-          if (isPlaying) stopPlayback(false); 
-        } else {
-          recButton.classList.remove('active'); 
-          updateMainDisplay('tempo'); 
-        }
-      });
-
-      document.getElementById('startButton').addEventListener('click', () => { 
-          if (!toneJsInitialized) initAudio(); 
-          togglePlayback(); 
-      });
-      document.getElementById('loopButton').addEventListener('click', () => { 
-          isLooping = !isLooping; 
-          document.getElementById('loopButton').classList.toggle('active', isLooping); 
-      });
-      
-      function clearAllPlaybackTimeouts() { 
-          playbackTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
-          playbackTimeouts.length = 0; 
-          if (sequenceEndTimeout) { clearTimeout(sequenceEndTimeout); sequenceEndTimeout = null; }
-      }
-
-      function stopPlayback(finishedNaturally = false) { 
-          isPlaying = false; 
-          document.getElementById('startButton').classList.remove('active');
-          clearAllPlaybackTimeouts(); 
-          if (finishedNaturally && !isRecording) { 
-            updateMainDisplay('tempo'); 
-          } else if (!isRecording) { 
-            updateMainDisplay('idle'); 
-          }
-          document.querySelectorAll('.pad.active-playing').forEach(p => p.classList.remove('active-playing'));
-      }
-
-      function togglePlayback() {
-          const startButton = document.getElementById('startButton');
-          if (isPlaying) {
-              stopPlayback(false); 
-          } else {
-              if (recordedSequence.length === 0) { 
-                  updateMainDisplay('customText', "NO SEQUENCE"); 
-                  setTimeout(() => { if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-                  return; 
-              }
-              isPlaying = true;
-              playbackStartTime = Tone.now(); 
-              startButton.classList.add('active');
-              updateMainDisplay('playing');
-              clearAllPlaybackTimeouts(); 
-              
-              const currentLoopStart = loopMarkerTimes.start;
-              const currentLoopEnd = loopMarkerTimes.end;
-              let effectiveLoopStart = (isLooping && currentLoopStart !== null) ? currentLoopStart : 0;
-              let effectiveLoopEnd = (isLooping && currentLoopEnd !== null && currentLoopEnd > currentLoopStart) ? currentLoopEnd : Infinity;
-              
-              if (!isLooping) {
-                  effectiveLoopStart = 0;
-                  effectiveLoopEnd = Infinity;
-              }
-
-              let maxEventTimeInLoop = 0; 
-
-              recordedSequence.forEach(event => {
-                  if (event.time >= effectiveLoopStart && event.time < effectiveLoopEnd) {
-                      const playTime = (event.time - effectiveLoopStart) * 1000; 
-                      if (playTime >= 0) { 
-                          const timeoutId = setTimeout(() => {
-                              if (!isPlaying) return; 
-                              playSound(event.pad, event.bank, event.index); 
-                              visualPadTrigger(event.pad, true); 
-                          }, playTime);
-                          playbackTimeouts.push(timeoutId);
-                          if ((event.time - effectiveLoopStart) > maxEventTimeInLoop) {
-                             maxEventTimeInLoop = (event.time - effectiveLoopStart);
-                          }
-                      }
-                  }
-              });
-              
-              let sequenceDurationMs;
-              if (isLooping && currentLoopStart !== null && currentLoopEnd !== null && currentLoopEnd > currentLoopStart) {
-                  sequenceDurationMs = (currentLoopEnd - currentLoopStart) * 1000;
-              } else {
-                  let fullSequenceMaxTime = 0;
-                   recordedSequence.forEach(ev => { 
-                       if (ev.time > fullSequenceMaxTime) fullSequenceMaxTime = ev.time; 
-                   });
-                  sequenceDurationMs = (fullSequenceMaxTime + 0.5) * 1000; 
-              }
-              if (sequenceDurationMs <=0) sequenceDurationMs = 500; 
-
-              sequenceEndTimeout = setTimeout(() => {
-                  if (isLooping && isPlaying) { 
-                      stopPlayback(false); 
-                      setTimeout(() => { if (isLooping) togglePlayback(); }, 50); 
-                  } else if (isPlaying) { 
-                      stopPlayback(true); 
-                  }
-              }, sequenceDurationMs);
-          }
-      }
-      
-      document.getElementById('markButton').addEventListener('click', () => { 
-        if (!toneJsInitialized) initAudio(); 
-        const email = 'wesables@icloud.com';
-        const subject = 'PSTN-404909 Sampler Feedback / Inquiry'; // Updated sampler name
-        window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
-        updateMainDisplay('customText', "OPENING EMAIL...");
-        setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 2000);
-      });
-
-      document.getElementById('deleteButton').addEventListener('click', () => {
-          if (!toneJsInitialized) initAudio();
-          if (loopMarkerTimes.start !== null || loopMarkerTimes.end !== null) {
-              loopMarkerTimes.start = null; 
-              loopMarkerTimes.end = null;
-              updateMainDisplay('customText', "LOOP MARKERS CLEARED");
-              setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-
-              if (isPlaying && isLooping) { 
-                  stopPlayback(false);
-                  setTimeout(() => togglePlayback(), 50); 
-              }
-          } else {
-              updateMainDisplay('customText', "NO LOOP MARKERS SET");
-              setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 1500);
-          }
-      });
-
-      document.getElementById('patternSelectButton').addEventListener('click', () => {
-        const spotifyURL = "https://open.spotify.com/artist/1MbrMRARCY8MXQKozgkkLJ?si=dUYuZK2-SaKTeJR1X__ibw"; // Replace with your actual Spotify URL
-        window.open(spotifyURL, '_blank');
-        updateMainDisplay('customText', "OPENING SPOTIFY...");
-        setTimeout(() => {if(!isRecording && !isPlaying) updateMainDisplay('idle');}, 2000);
-      });
-      
-      function initialUserInteractionHandler() { if (!toneJsInitialized) initAudio(); }
-      document.body.addEventListener('click', initialUserInteractionHandler, { once: true });
-      document.body.addEventListener('keydown', initialUserInteractionHandler, { once: true });
-      updateMainDisplay('idle'); 
-    });
-  </script>
-</body>
-</html>
