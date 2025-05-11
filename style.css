@@ -1,139 +1,145 @@
 body {
     margin: 0;
-    font-family: 'Merriweather', serif; /* Default body font for the card */
-    background-color: #111111; /* OVERALL PAGE BACKGROUND: BLACK */
-    color: #333333; /* Default text color, will be overridden for card text */
+    font-family: 'Merriweather', serif;   /* Default font for text inside the card */
+    background-color: #000000;          /* MAIN PAGE BACKGROUND: STRICTLY BLACK */
     line-height: 1.6;
-    padding-top: 20px; /* Add some space at the very top of the page */
-    padding-bottom: 40px; /* Add some space at the very bottom */
+    padding-top: 30px;                  /* Space above the sampler */
+    padding-bottom: 30px;               /* Space below the card */
 }
 
 .site-container {
-    max-width: 1200px; /* Or whatever max-width you prefer for the whole site content */
+    /* This class is mostly for potential future use if you want to constrain overall width on very large screens.
+       For a fully black background extending to edges, direct styling on body and elements is key. */
     margin: 0 auto;
-    padding: 0 15px; /* Horizontal padding for the site container */
+    padding: 0 15px; /* Ensures content isn't flush against screen edges on mobile */
 }
 
 /* Sampler Section */
 .sampler-section {
-    margin-bottom: 40px; /* Space between sampler iframe and the info card */
-    /* The iframe itself is centered via its style attribute in the HTML */
+    margin-bottom: 30px; /* Space between sampler's dark mat and the yellow info card */
+    /* The iframe with its internal #1a1a1a background will sit on the page's black background */
 }
 
-/* Info Card Styles */
+/* Info Card Styles - Styled to match the "yellow screenshot" */
 .info-card {
     background-color: #F3EADA; /* YELLOW BACKGROUND FOR THE CARD - from your target screenshot */
-    color: #383838;            /* DARK TEXT COLOR FOR THE CARD - from your target screenshot */
-    padding: 25px;
-    border-radius: 6px;        /* Subtle rounded corners, optional */
-    max-width: 500px;          /* CARD WIDTH: A bit smaller than sampler's 550px/590px effective width */
-    margin: 0 auto;            /* Center the card on the black background */
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow against the black bg */
+    color: #383838;            /* DARK TEXT COLOR FOR THE CARD - as in screenshot */
+    padding: 20px 25px 25px 25px; /* Top padding slightly less than others to match screenshot look */
+    border-radius: 4px;        /* Screenshot has very slightly rounded corners */
+    max-width: 520px;          /* CARD WIDTH: A bit smaller than sampler (sampler is 550px + padding) */
+    margin: 0 auto;            /* Center the card on the black page background */
+    /* No box-shadow in the target yellow screenshot */
 }
 
 .card-top-text {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 0.9em;  /* Matches target screenshot more closely */
-    color: #505050;    /* Matches target screenshot */
+    font-family: 'Open Sans', sans-serif; /* Or a similar plain sans-serif */
+    font-size: 0.9em;
+    color: #5a5a5a; /* Slightly darker, as in screenshot */
     text-align: left;
     margin-top: 0;
-    margin-bottom: 15px; /* Matches target screenshot */
+    margin-bottom: 18px; /* Spacing as in screenshot */
 }
 
 .spotify-embed-card {
-    margin-bottom: 20px; /* Matches target screenshot */
+    margin-bottom: 22px; /* Spacing as in screenshot */
 }
 
 .spotify-embed-card iframe {
-    border-radius: 12px !important; /* From target style, may need !important if Spotify's CSS is strong */
+    border-radius: 12px !important; /* As in your provided iframe code */
     width: 100%;
-    display: block; /* Ensures it behaves like a block */
-    /* height will be taken from the iframe's height attribute (352px in your case) */
+    display: block;
+    min-height: 152px; /* Spotify's compact player height, your iframe code uses 352px */
 }
 
 .card-main-headings h1 {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.8em;  /* Matches target screenshot (adjust as needed) */
+    font-family: 'Playfair Display', serif; /* Or similar prominent serif */
+    font-size: 2.7em;   /* Matches screenshot proportions */
     font-weight: 700;
-    color: #2c2c2c;     /* Matches target screenshot */
+    color: #2c2c2c;
     margin-top: 0;
-    margin-bottom: 0.05em; /* Very tight to h2 as in screenshot */
-    line-height: 1.1;
+    margin-bottom: 0; /* No space between H1 and H2 in screenshot */
+    line-height: 1.05;
 }
 
 .card-main-headings h2 {
-    font-family: 'Merriweather', serif;
-    font-size: 1.15em; /* Matches target screenshot */
+    font-family: 'Merriweather', serif; /* Or similar readable serif */
+    font-size: 1.1em; /* Matches screenshot proportions */
     font-weight: normal;
-    color: #454545;     /* Matches target screenshot */
-    margin-top: 0;
-    margin-bottom: 1.5em; /* Space before bio */
+    color: #454545;
+    margin-top: 5px; /* Small space after H1 */
+    margin-bottom: 1.3em; /* Space before bio */
+    line-height: 1.2;
 }
 
 .card-bio {
-    font-family: 'Merriweather', serif;
-    font-size: 1em;    /* Matches target screenshot */
-    color: #383838;     /* Matches target screenshot */
-    line-height: 1.65; /* Matches target screenshot */
-    margin-bottom: 25px; /* Matches target screenshot */
+    font-family: 'Merriweather', serif; /* Or similar readable serif */
+    font-size: 1em;
+    color: #383838;
+    line-height: 1.6; /* Readable line height */
+    margin-top: 0;
+    margin-bottom: 22px;
 }
 
 .card-details-grid {
     display: flex;
-    flex-wrap: nowrap; /* Keep them side-by-side */
-    gap: 20px;       /* Space between Location and Contact blocks */
-    margin-top: 15px;
-    /* No border-top needed if we want it exactly like screenshot */
-    padding-top: 0;
+    flex-wrap: nowrap; /* Location and Contact side-by-side */
+    gap: 15px 30px;   /* Row and Column gap */
+    margin-top: 10px; /* Reduced top margin */
+    padding-top: 0; /* No top padding, no border */
 }
 
 .card-detail-item {
-    flex: 1;
+    flex: 1; /* Distribute space equally */
 }
 
 .card-detail-item h3 {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 1em;    /* Matches target screenshot */
+    font-family: 'Open Sans', sans-serif; /* Or similar plain sans-serif */
+    font-size: 0.95em;
     font-weight: 600;
-    color: #333;        /* Matches target screenshot */
+    color: #333;
     margin-top: 0;
-    margin-bottom: 0.1em; /* Tight to the text below */
+    margin-bottom: 2px; /* Very small space to text below */
 }
 
 .card-detail-item p {
-    font-family: 'Merriweather', serif;
-    font-size: 0.95em;  /* Matches target screenshot */
-    color: #454545;      /* Matches target screenshot */
+    font-family: 'Merriweather', serif; /* Or similar readable serif */
+    font-size: 0.9em;
+    color: #454545;
     margin: 0;
 }
 
 /* Mobile Responsiveness */
-@media (max-width: 768px) {
+@media (max-width: 560px) { /* Adjust breakpoint for when card might need more width */
     .info-card {
         padding: 20px;
-        max-width: 90%; /* Allow card to be wider on mobile */
+        max-width: calc(100% - 30px); /* Use more of the screen width, with small side margins */
+        margin-left: 15px;
+        margin-right: 15px;
     }
     .card-main-headings h1 {
-        font-size: 2.2em;
+        font-size: 2.1em;
     }
     .card-main-headings h2 {
-        font-size: 1.05em;
+        font-size: 1em;
     }
     .card-bio {
         font-size: 0.95em;
     }
+    .card-details-grid {
+        gap: 15px 20px; /* Slightly reduce gap on mobile */
+    }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 420px) { /* For very small screens */
     .card-main-headings h1 {
-        font-size: 1.9em;
+        font-size: 1.8em;
+    }
+    .card-details-grid {
+        flex-direction: column; /* Stack Location and Contact */
+        align-items: flex-start;
+        gap: 15px; /* Gap when stacked */
     }
     .info-card {
         padding: 15px;
-    }
-    .card-details-grid {
-        flex-direction: column; /* Stack on very small screens if needed */
-        align-items: flex-start;
-        gap: 15px;
     }
 }
