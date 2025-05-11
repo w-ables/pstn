@@ -4,72 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Public Spreads the News</title>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@800&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Merriweather:wght@400;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="site-container">
-
-        <section class="sampler-section-container">
-            <div class="sampler"> <div class="main-title">PSTN-404909</div>
-                <div class="knob-panel">
-                    <div class="controls">
-                        <div class="control-group">
-                            <div class="knob" id="volumeKnob" data-value="80"></div>
-                            <div class="knob-label">VOLUME</div>
-                        </div>
-                        <div class="control-group">
-                            <div class="knob" id="echoFeedbackKnob" data-value="0"></div>
-                            <div class="knob-label">ECHO FEEDBACK</div>
-                        </div>
-                        <div class="control-group">
-                            <div class="knob" id="reverbDecayKnob" data-value="30"></div>
-                            <div class="knob-label">REVERB DECAY</div>
-                        </div>
-                        <div class="control-group">
-                            <div class="knob" id="fxVolumeKnob" data-value="0"></div>
-                            <div class="knob-label">FX VOLUME</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="display">
-                    <div id="defaultDisplayText" class="display-default-text">public spreads the news</div>
-                    <div id="statusDisplayText" class="display-status-overlay"></div>
-                    <div class="display-grain-overlay"></div>
-                </div>
-                <div class="buttons-grid">
-                    <div class="button" id="patternSelectButton">PATTERN<br>SELECT</div>
-                    <div class="button" id="recButton">REC</div>
-                    <div class="button" id="markButton">MARK</div>
-                    <div class="button" id="deleteButton">DELETE</div>
-                    <div class="button" id="loopButton">LOOP</div>
-                    <div class="button" id="startButton">START<br>STOP</div>
-                </div>
-                <div class="pads" id="pads">
-                    <div class="pad" data-pad="1">1</div> <div class="pad" data-pad="2">2</div>
-                    <div class="pad" data-pad="3">3</div> <div class="pad" data-pad="4">4</div>
-                    <div class="pad" data-pad="5">5</div> <div class="pad" data-pad="6">6</div>
-                    <div class="pad" data-pad="7">7</div> <div class="pad" data-pad="8">8</div>
-                    <div class="pad" data-pad="9">9</div> <div class="pad" data-pad="10">10</div>
-                    <div class="pad" data-pad="11">11</div><div class="pad" data-pad="12">12</div>
-                </div>
-            </div>
+        <section class="sampler-section">
+            <iframe src="sampler_app.html" title="Interactive Sampler" style="width: 100%; height: 610px; border: 0; max-width: 550px; display: block; margin: 0 auto;" loading="lazy"></iframe>
         </section>
 
         <section class="info-card">
             <p class="card-top-text">public spreads the news</p>
+            
             <div class="spotify-embed-card">
                 <iframe style="border-radius:12px" src="https://open.spotify.com/embed/artist/1MbrMRARCY8MXQKozgkkLJ?utm_source=generator&theme=0" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
             </div>
+
             <div class="card-main-headings">
                 <h1>Label Founder / Music Maker</h1>
                 <h2>public spreads the news</h2>
             </div>
+
             <p class="card-bio">IRL name is Wes Ables. I also go by Lurt Koder, Lyles Wrigley, GENOMI, panthera95, Jesiah Rose, and PSTN (reworks). I have written, recorded, and produced over 30 releases. I've also played countless shows across the country. Founded Illuminated Paths and dropped the Late Night Delight collab with St. Pepsi and Luxury Elite.</p>
+            
             <div class="card-details-grid">
                 <div class="card-detail-item">
                     <h3>Location</h3>
@@ -82,103 +41,5 @@
             </div>
         </section>
     </div>
-
-    <script>
-        // PASTE YOUR ENTIRE SAMPLER JAVASCRIPT HERE
-        // (The code starting with document.addEventListener('DOMContentLoaded', ... )
-        // including the setupKnob function with touch controls, etc.
-        // Make sure the setupKnob has the touch event handlers we added.
-        document.addEventListener('DOMContentLoaded', function() {
-          // --- Global State & Elements ---
-          const defaultDisplayTextEl = document.getElementById('defaultDisplayText');
-          // ... (rest of your sampler JS) ...
-
-            // Ensure the FULL setupKnob function with touch and mouse handlers is here
-            function setupKnob(id, initialValue, callback) {
-                const knob = document.getElementById(id);
-                if (!knob) return;
-                knob.dataset.value = initialValue;
-                updateKnobVisual(knob, initialValue);
-                let isDragging = false;
-                let startY, startValue;
-
-                // Mouse Event Handlers
-                function handleMouseDown(e) {
-                    if (!toneJsInitialized) initAudio();
-                    isDragging = true;
-                    startY = e.clientY;
-                    startValue = parseFloat(knob.dataset.value);
-                    knob.style.cursor = 'grabbing';
-                    document.addEventListener('mousemove', handleMouseMove);
-                    document.addEventListener('mouseup', handleMouseUp);
-                    e.preventDefault();
-                }
-
-                function handleMouseMove(e) {
-                    if (!isDragging) return;
-                    const deltaY = startY - e.clientY;
-                    let newValue = startValue + (deltaY / 1.5);
-                    newValue = Math.max(0, Math.min(100, Math.round(newValue)));
-                    knob.dataset.value = newValue;
-                    updateKnobVisual(knob, newValue);
-                    if (callback) callback(id, newValue);
-                }
-
-                function handleMouseUp() {
-                    isDragging = false;
-                    knob.style.cursor = 'grab';
-                    document.removeEventListener('mousemove', handleMouseMove);
-                    document.removeEventListener('mouseup', handleMouseUp);
-                }
-
-                // Touch Event Handlers
-                function handleTouchStart(e) {
-                    if (!toneJsInitialized) initAudio();
-                    isDragging = true;
-                    startY = e.touches[0].clientY;
-                    startValue = parseFloat(knob.dataset.value);
-                    document.addEventListener('touchmove', handleTouchMove, { passive: false });
-                    document.addEventListener('touchend', handleTouchEnd);
-                    document.addEventListener('touchcancel', handleTouchEnd);
-                    e.preventDefault();
-                }
-
-                function handleTouchMove(e) {
-                    if (!isDragging) return;
-                    const deltaY = startY - e.touches[0].clientY;
-                    let newValue = startValue + (deltaY / 1.5);
-                    newValue = Math.max(0, Math.min(100, Math.round(newValue)));
-                    knob.dataset.value = newValue;
-                    updateKnobVisual(knob, newValue);
-                    if (callback) callback(id, newValue);
-                    e.preventDefault();
-                }
-
-                function handleTouchEnd() {
-                    isDragging = false;
-                    document.removeEventListener('touchmove', handleTouchMove);
-                    document.removeEventListener('touchend', handleTouchEnd);
-                    document.removeEventListener('touchcancel', handleTouchEnd);
-                }
-
-                knob.addEventListener('mousedown', handleMouseDown);
-                knob.addEventListener('touchstart', handleTouchStart, { passive: false });
-
-                if (callback && toneJsInitialized) callback(id, initialValue);
-            }
-
-          // ... (ALL of your other sampler JavaScript functions like initAudio, applyKnobEffect, playSound, etc.)
-            // Make sure the initKnobs() call is present and other initializations.
-
-            // Example of where your other functions would continue:
-            // function initAudio() { ... }
-            // function applyKnobEffect(id, value) { ... }
-            // ... etc ...
-            // initAudio(); // Or your initial call to start things up.
-            // updateMainDisplay('idle'); // Or similar initial state calls.
-            
-            // PASTE THE REST OF YOUR SAMPLER'S JS HERE
-        });
-    </script>
 </body>
 </html>
