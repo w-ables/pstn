@@ -1,151 +1,139 @@
 body {
     margin: 0;
-    font-family: 'Merriweather', serif;
-    background-color: #F3EADA; /* Main page background - REMAINS THE SAME */
-    color: #333333;
+    font-family: 'Merriweather', serif; /* Default body font for the card */
+    background-color: #111111; /* OVERALL PAGE BACKGROUND: BLACK */
+    color: #333333; /* Default text color, will be overridden for card text */
     line-height: 1.6;
+    padding-top: 20px; /* Add some space at the very top of the page */
+    padding-bottom: 40px; /* Add some space at the very bottom */
 }
 
 .site-container {
-    max-width: 1200px;
+    max-width: 1200px; /* Or whatever max-width you prefer for the whole site content */
     margin: 0 auto;
-    padding: 20px; /* Ensures some space around the content on very wide screens */
+    padding: 0 15px; /* Horizontal padding for the site container */
 }
 
-/* Sampler Section - The iframe will take care of the sampler's internal styling */
+/* Sampler Section */
 .sampler-section {
-    margin-bottom: 30px; /* Space between sampler and the new card */
+    margin-bottom: 40px; /* Space between sampler iframe and the info card */
+    /* The iframe itself is centered via its style attribute in the HTML */
 }
 
-/* NEW Info Card Styles */
+/* Info Card Styles */
 .info-card {
-    background-color: #FBF9F3; /* Slightly lighter yellow/beige for the card itself, adjust if needed */
+    background-color: #F3EADA; /* YELLOW BACKGROUND FOR THE CARD - from your target screenshot */
+    color: #383838;            /* DARK TEXT COLOR FOR THE CARD - from your target screenshot */
     padding: 25px;
-    border-radius: 8px; /* Optional: slightly rounded corners for the card */
-    /* box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); Optional: a very subtle shadow for card effect */
-    max-width: 750px; /* Max width for the card content area */
-    margin: 0 auto; /* Center the card */
+    border-radius: 6px;        /* Subtle rounded corners, optional */
+    max-width: 500px;          /* CARD WIDTH: A bit smaller than sampler's 550px/590px effective width */
+    margin: 0 auto;            /* Center the card on the black background */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Optional: subtle shadow against the black bg */
 }
 
 .card-top-text {
     font-family: 'Open Sans', sans-serif;
-    font-size: 0.95em;
-    color: #505050;
-    text-align: left; /* As per screenshot */
-    margin-bottom: 20px;
+    font-size: 0.9em;  /* Matches target screenshot more closely */
+    color: #505050;    /* Matches target screenshot */
+    text-align: left;
+    margin-top: 0;
+    margin-bottom: 15px; /* Matches target screenshot */
 }
 
 .spotify-embed-card {
-    margin-bottom: 25px;
+    margin-bottom: 20px; /* Matches target screenshot */
 }
 
-.spotify-embed-card iframe { /* Style the iframe from Spotify if needed */
-    border-radius: 12px !important; /* Override Spotify's default if necessary */
+.spotify-embed-card iframe {
+    border-radius: 12px !important; /* From target style, may need !important if Spotify's CSS is strong */
     width: 100%;
+    display: block; /* Ensures it behaves like a block */
+    /* height will be taken from the iframe's height attribute (352px in your case) */
 }
-
 
 .card-main-headings h1 {
     font-family: 'Playfair Display', serif;
-    font-size: 3.2em; /* Adjusted for card context */
+    font-size: 2.8em;  /* Matches target screenshot (adjust as needed) */
     font-weight: 700;
-    color: #2c2c2c;
+    color: #2c2c2c;     /* Matches target screenshot */
     margin-top: 0;
-    margin-bottom: 0.1em; /* Tighter spacing */
+    margin-bottom: 0.05em; /* Very tight to h2 as in screenshot */
     line-height: 1.1;
 }
 
 .card-main-headings h2 {
-    font-family: 'Merriweather', serif; /* Screenshot uses serif here */
-    font-size: 1.3em; /* Adjusted for card context */
-    font-weight: normal; /* Not bold in screenshot for this one */
-    color: #454545;
+    font-family: 'Merriweather', serif;
+    font-size: 1.15em; /* Matches target screenshot */
+    font-weight: normal;
+    color: #454545;     /* Matches target screenshot */
     margin-top: 0;
-    margin-bottom: 1.2em;
+    margin-bottom: 1.5em; /* Space before bio */
 }
 
 .card-bio {
-    font-family: 'Merriweather', serif; /* Explicitly set for card bio */
-    font-size: 1.05em; /* Slightly adjusted */
-    color: #333;
-    line-height: 1.7;
-    margin-bottom: 30px;
+    font-family: 'Merriweather', serif;
+    font-size: 1em;    /* Matches target screenshot */
+    color: #383838;     /* Matches target screenshot */
+    line-height: 1.65; /* Matches target screenshot */
+    margin-bottom: 25px; /* Matches target screenshot */
 }
 
 .card-details-grid {
     display: flex;
-    flex-wrap: wrap;
-    gap: 30px 40px; /* Row and column gap */
-    margin-top: 20px;
-    border-top: 1px solid #E0DACE; /* Optional: a subtle separator line */
-    padding-top: 20px;
+    flex-wrap: nowrap; /* Keep them side-by-side */
+    gap: 20px;       /* Space between Location and Contact blocks */
+    margin-top: 15px;
+    /* No border-top needed if we want it exactly like screenshot */
+    padding-top: 0;
 }
 
 .card-detail-item {
     flex: 1;
-    min-width: 150px;
 }
 
 .card-detail-item h3 {
     font-family: 'Open Sans', sans-serif;
-    font-size: 1.1em; /* Adjusted for card context */
+    font-size: 1em;    /* Matches target screenshot */
     font-weight: 600;
-    color: #333;
-    margin-bottom: 0.2em;
+    color: #333;        /* Matches target screenshot */
+    margin-top: 0;
+    margin-bottom: 0.1em; /* Tight to the text below */
 }
 
 .card-detail-item p {
-    font-family: 'Merriweather', serif; /* Consistent with bio text */
-    font-size: 1em;
-    color: #454545;
+    font-family: 'Merriweather', serif;
+    font-size: 0.95em;  /* Matches target screenshot */
+    color: #454545;      /* Matches target screenshot */
     margin: 0;
 }
 
-/* REMOVE or COMMENT OUT these old styles as they are now handled by .info-card or its children */
-/*
-.page-header { ... }
-.spotify-and-title { ... }
-.spotify-embed { ... }
-.main-headings { ... } (note: .card-main-headings is the new selector)
-.main-headings h1 { ... }
-.main-headings h2 { ... }
-.about-section p { ... } (note: .card-bio is the new selector)
-.contact-details { ... } (note: .card-details-grid is the new selector)
-.detail-item { ... } (note: .card-detail-item is the new selector)
-.detail-item h3 { ... }
-.detail-item p { ... }
-*/
-
-
-/* Mobile Responsiveness - Adjusting for the card context */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
     .info-card {
         padding: 20px;
+        max-width: 90%; /* Allow card to be wider on mobile */
     }
     .card-main-headings h1 {
-        font-size: 2.5em; /* Adjusted for card on mobile */
+        font-size: 2.2em;
     }
     .card-main-headings h2 {
-        font-size: 1.15em; /* Adjusted for card on mobile */
+        font-size: 1.05em;
     }
     .card-bio {
-        font-size: 1em;
-    }
-    .card-details-grid {
-        flex-direction: column; /* Stack location and contact */
-        gap: 20px;
-        align-items: flex-start;
-    }
-    .spotify-embed-card { /* Ensure Spotify embed behaves well */
-        max-width: 100%;
+        font-size: 0.95em;
     }
 }
 
 @media (max-width: 480px) {
     .card-main-headings h1 {
-        font-size: 2em;
+        font-size: 1.9em;
     }
-     .info-card {
+    .info-card {
         padding: 15px;
+    }
+    .card-details-grid {
+        flex-direction: column; /* Stack on very small screens if needed */
+        align-items: flex-start;
+        gap: 15px;
     }
 }
